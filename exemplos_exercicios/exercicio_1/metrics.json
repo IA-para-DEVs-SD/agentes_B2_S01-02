@@ -1,0 +1,8 @@
+{
+  "total_users": 20,
+  "returning_users": 11,
+  "returning_same_problem": 9,
+  "stopped_responding": 7,
+  "cancelled": 3,
+  "completed": 10
+}
