@@ -1,0 +1,9 @@
+Cliente: Meu pedido não chegou
+Cliente: Já faz 5 dias
+Cliente: Preciso de ajuda
+Agente: Estamos verificando
+Cliente: Ainda não resolveram
+Cliente: Quero cancelar
+Cliente: Vou abrir reclamação
+Cliente: Vou ligar no PROCON
+Cliente: Estou mais calma, posso esperar 30 dias

@@ -1,0 +1,11 @@
+{
+  "key_points": [
+    "Meu pedido não chegou.",
+    "Já faz 5 dias.",
+    "Vou abrir reclamação.",
+    "Estou mais calma, posso esperar 30 dias."
+  ],
+  "sentiment": "neutral",
+  "action_needed": "Confirmar prazo de 30 dias com o cliente e acompanhar o pedido.",
+  "priority": "medium"
+}
