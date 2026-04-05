@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "enabled": true,
+  "name": "Interaction-Summary-Workflow",
+  "when": {
+    "type": "fileSave",
+    "patterns": [
+      "**/workflow/interactions.txt"
+    ]
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "python exemplos_exercicios/exemplos/B2S1/workflow/summarize.py"
+  },
+  "workspaceFolderName": "agentes_B2_S01-02",
+  "shortName": "interaction-summary-workflow"
+}

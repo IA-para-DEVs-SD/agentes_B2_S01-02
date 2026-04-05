@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "enabled": true,
+  "name": "interaction-summary",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "exemplos_exercicios/exemplos/B2S1/workflow/interactions.txt"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read exemplos_exercicios/exemplos/B2S1/workflow/interactions.txt and overwrite exemplos_exercicios/exemplos/B2S1/workflow/summary.json with valid JSON only using this structure: {\"key_points\": [], \"sentiment\": \"\", \"action_needed\": \"\", \"priority\": \"\"}."
+  },
+  "workspaceFolderName": "agentes_B2_S01-02",
+  "shortName": "interaction-summary"
+}
