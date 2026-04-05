@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-04-05",
+  "decision": "update",
+  "reason": "Customer de-escalated from threatening PROCON to expressing calmness and willingness to wait 30 days. This is a meaningful change requiring priority downgrade from urgent to medium and sentiment shift from negative to neutral.",
+  "changes_made": [
+    "Updated sentiment: negative → neutral",
+    "Updated priority: urgent → medium",
+    "Updated key_points to reflect de-escalation",
+    "Updated action_needed to confirm 30-day timeline"
+  ],
+  "current_state": {
+    "sentiment": "neutral",
+    "priority": "medium",
+    "key_points_count": 4
+  },
+  "analysis": "The customer's final message shows significant de-escalation. They explicitly state they are calmer and willing to wait 30 days, which contradicts the previous escalation threats. This requires updating the summary to reflect the current, less urgent state."
+}
