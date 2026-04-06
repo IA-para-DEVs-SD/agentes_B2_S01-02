@@ -1,0 +1,80 @@
+ticket_id,conversation_id,user_id,speaker,message,timestamp,ticket_status
+1001,1,101,client,Não consigo fazer login,2026-04-01 09:00,open
+1001,1,101,atendente,Você pode tentar redefinir sua senha?,2026-04-01 09:02,pending
+1001,1,101,client,Já tentei e não funcionou,2026-04-01 09:05,open
+1001,1,101,atendente,Ok, vou verificar para você,2026-04-01 09:06,pending
+1001,1,101,atendente,Estamos aguardando seu retorno,2026-04-01 12:00,pending
+1001,1,101,atendente,Encerrando atendimento por falta de resposta,2026-04-01 18:00,closed
+1002,2,102,client,Meu pagamento não passou,2026-04-01 10:00,open
+1002,2,102,atendente,Você pode verificar seu cartão?,2026-04-01 10:02,pending
+1002,2,102,atendente,Podemos te ajudar com algo mais?,2026-04-01 14:00,pending
+1002,2,102,client,Consegui resolver aqui, obrigado,2026-04-01 14:10,solved
+1003,3,103,client,Minha entrega atrasou,2026-04-01 11:00,open
+1003,3,103,atendente,Estamos verificando com a transportadora,2026-04-01 11:03,pending
+1003,3,103,client,Ok, obrigado,2026-04-01 11:10,open
+1003,3,103,atendente,Te aviso assim que tiver atualização,2026-04-01 11:12,pending
+1003,3,103,atendente,Atualização: entrega sai hoje,2026-04-01 15:00,pending
+1003,3,103,client,Perfeito, obrigado!,2026-04-01 15:10,solved
+1004,4,104,client,Quero cancelar meu pedido,2026-04-01 12:00,open
+1004,4,104,atendente,Posso te ajudar com isso,2026-04-01 12:02,pending
+1004,4,104,client,Já resolvi, obrigado,2026-04-01 12:10,solved
+1005,5,105,client,Não consigo acessar minha conta,2026-04-01 13:00,open
+1005,5,105,atendente,Você pode tentar redefinir sua senha?,2026-04-01 13:02,pending
+1005,5,105,client,Sumiu aqui o botão,2026-04-01 13:05,open
+1005,5,105,atendente,Entendi, vou te enviar o link,2026-04-01 13:06,pending
+1005,5,105,atendente,Conseguiu acessar?,2026-04-01 17:00,pending
+1006,6,106,client,Meu pedido não chegou,2026-04-01 14:00,open
+1006,6,106,atendente,Você pode confirmar o endereço?,2026-04-01 14:02,pending
+1006,6,106,client,Sim, está correto,2026-04-01 14:05,open
+1006,6,106,atendente,Ok, vamos investigar,2026-04-01 14:07,pending
+1006,6,106,atendente,Ainda aguardando resposta sua,2026-04-01 20:00,pending
+1006,6,106,atendente,Encerrando atendimento,2026-04-02 09:00,closed
+1007,7,107,client,Quero trocar meu produto,2026-04-01 15:00,open
+1007,7,107,atendente,Claro, qual o motivo?,2026-04-01 15:02,pending
+1007,7,107,client,Veio com defeito,2026-04-01 15:05,open
+1007,7,107,atendente,Vamos providenciar a troca,2026-04-01 15:07,pending
+1007,7,107,client,Obrigado!,2026-04-01 15:10,solved
+1008,8,108,client,Não consigo acessar o app,2026-04-01 16:00,open
+1008,8,108,atendente,Tente atualizar o aplicativo,2026-04-01 16:02,pending
+1008,8,108,atendente,Conseguiu resolver?,2026-04-01 20:00,pending
+1009,9,109,client,Meu pagamento foi duplicado,2026-04-01 17:00,open
+1009,9,109,atendente,Vamos verificar isso agora,2026-04-01 17:02,pending
+1009,9,109,client,Ok, fico no aguardo,2026-04-01 17:05,open
+1009,9,109,atendente,Atualização enviada por email,2026-04-01 19:00,pending
+1010,10,110,client,Minha entrega está atrasada,2026-04-01 18:00,open
+1010,10,110,atendente,Estamos verificando,2026-04-01 18:02,pending
+1010,10,110,client,Preciso disso urgente,2026-04-01 18:05,open
+1010,10,110,atendente,Entendo, vou priorizar,2026-04-01 18:07,pending
+1010,10,110,atendente,Atualização: sai amanhã,2026-04-01 22:00,pending
+1011,11,111,client,Quero cancelar minha conta,2026-04-02 09:00,open
+1011,11,111,atendente,Posso te ajudar com isso,2026-04-02 09:02,pending
+1012,12,112,client,Não consigo redefinir senha,2026-04-02 10:00,open
+1012,12,112,atendente,Você pode tentar novamente?,2026-04-02 10:02,pending
+1012,12,112,client,Ainda não funciona,2026-04-02 10:05,open
+1013,13,113,client,Meu pedido veio errado,2026-04-02 11:00,open
+1013,13,113,atendente,Você pode enviar uma foto?,2026-04-02 11:02,pending
+1013,13,113,client,Sim, vou enviar,2026-04-02 11:05,open
+1013,13,113,atendente,Perfeito, aguardando,2026-04-02 11:07,pending
+1014,14,114,client,Problema no pagamento,2026-04-02 12:00,open
+1014,14,114,atendente,Qual o erro exibido?,2026-04-02 12:02,pending
+1014,14,114,client,Cartão recusado,2026-04-02 12:05,open
+1014,14,114,atendente,Tente outro método,2026-04-02 12:07,pending
+1014,14,114,client,Funcionou, obrigado,2026-04-02 12:10,solved
+1015,15,115,client,Entrega não chegou,2026-04-02 13:00,open
+1015,15,115,atendente,Estamos verificando,2026-04-02 13:02,pending
+1016,16,116,client,App travando,2026-04-02 14:00,open
+1016,16,116,atendente,Qual versão do app?,2026-04-02 14:02,pending
+1016,16,116,client,Versão antiga,2026-04-02 14:05,open
+1016,16,116,atendente,Atualize e tente novamente,2026-04-02 14:07,pending
+1016,16,116,client,Funcionou, obrigado!,2026-04-02 14:10,solved
+1017,17,117,client,Quero reembolso,2026-04-02 15:00,open
+1017,17,117,atendente,Posso verificar isso,2026-04-02 15:02,pending
+1017,17,117,client,Ok, aguardo,2026-04-02 15:05,open
+1018,18,118,client,Erro ao cadastrar,2026-04-02 16:00,open
+1018,18,118,atendente,Qual erro aparece?,2026-04-02 16:02,pending
+1019,19,119,client,Login não funciona,2026-04-02 17:00,open
+1019,19,119,atendente,Tente redefinir senha,2026-04-02 17:02,pending
+1019,19,119,client,Agora funcionou,2026-04-02 17:05,solved
+1020,20,120,client,Entrega atrasada,2026-04-02 18:00,open
+1020,20,120,atendente,Estamos verificando,2026-04-02 18:02,pending
+1020,20,120,client,Ok, obrigado,2026-04-02 18:05,solved
