@@ -1,18 +1,21 @@
 # Proposta do exercício
+Resolver usando o GEMINI
 ## Exercício — Análise de Feedbacks e Geração de Relatório
 A empresa tem uma tabela com feedbacks de usuários.
 
-O objetivo é construir um processo que analise cada feedback individualmente e, ao final, gere um relatório (números consolidados e relatório para a gerência) para o negócio.
+O objetivo é construir um agente que analise cada feedback individualmente e, ao final, gere um relatório (números consolidados e relatório para a gerência) para o negócio.
 
 O que os alunos devem fazer:
 
 a) Ler os feedbacks de uma tabela no banco
 b) Analisar cada feedback com apoio de LLM
 c) Classificar cada feedback
-d) Salvar os resultados estruturados
+d) Salvar os resultados estruturados (pode ser no banco ou pode fazer um append em um dict, por exemplo e salvar local)
 e) Gerar um relatório final com os principais achados
 
 Tabela de entrada: feedbacks 
+
+Sugestão: tranformar cada item em uma tool 
 
 Exemplos de conteúdo:
 1 | O app trava quando tento abrir a tela de pagamento
@@ -84,8 +87,3 @@ Consolidar os resultados e responder perguntas como:
 3. qual sentimento predominou
 5. quais temas principais surgiram
 
-O que isso ensina
-camada 1: micro
-analisar corretamente cada texto
-camada 2: macro
-transformar várias análises em visão de negócio
