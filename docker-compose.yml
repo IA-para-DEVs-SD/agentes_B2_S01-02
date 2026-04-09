@@ -11,6 +11,26 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d suporte_ai"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    container_name: agentes_app
+    env_file:
+      - exemplos_exercicios/.env
+    environment:
+      DB_HOST: postgres
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
 
 volumes:
   postgres_data:
