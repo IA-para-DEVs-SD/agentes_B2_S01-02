@@ -27,8 +27,7 @@ class SupportTicketAgentToolCalling:
                             "description": "ID do ticket"
                         }
                     },
-                    "required": ["ticket_id"],
-                    "additionalProperties": False,
+                    "required": ["ticket_id"]
                 },
             ),
             types.FunctionDeclaration(
@@ -42,8 +41,7 @@ class SupportTicketAgentToolCalling:
                             "description": "Texto da conversa consolidada"
                         }
                     },
-                    "required": ["conversation_text"],
-                    "additionalProperties": False,
+                    "required": ["conversation_text"]
                 },
             ),
             types.FunctionDeclaration(
@@ -57,8 +55,7 @@ class SupportTicketAgentToolCalling:
                             "description": "Texto da conversa consolidada"
                         }
                     },
-                    "required": ["conversation_text"],
-                    "additionalProperties": False,
+                    "required": ["conversation_text"]
                 },
             ),
         ]
@@ -87,6 +84,7 @@ class SupportTicketAgentToolCalling:
                             "login, pagamento, entrega, cancelamento, conta, outros.\n"
                             "Não reescreva a categoria. Não use valores como "
                             "'Problema de login', 'Erro de pagamento' ou similares.\n\n"
+                            "Retorne quais tools vc usou\n"
                             f"Analise o ticket {ticket_id}."
                         )
                     )
