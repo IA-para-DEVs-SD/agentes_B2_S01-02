@@ -1,0 +1,82 @@
+[
+  {
+    "ticket_id": 1001,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1002,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1003,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1004,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1005,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1006,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1007,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1008,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1009,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1010,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1011,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1012,
+    "status": "ativo"
+  },
+  {
+    "ticket_id": 1013,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1014,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1015,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1016,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1017,
+    "status": "ativo"
+  },
+  {
+    "ticket_id": 1018,
+    "status": "unknown"
+  },
+  {
+    "ticket_id": 1019,
+    "status": "resolvido"
+  },
+  {
+    "ticket_id": 1020,
+    "status": "resolvido"
+  }
+]

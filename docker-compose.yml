@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: agentes_postgres
+    environment:
+      POSTGRES_DB: suporte_ai
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:
