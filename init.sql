@@ -28,3 +28,10 @@ CREATE TABLE IF NOT EXISTS agent_runs (
     output_text TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE feedbacks (
+    feedback_id INT PRIMARY KEY,
+    feedback_text TEXT,
+    created_at TIMESTAMP,
+    channel VARCHAR(20)
+);
