@@ -16,21 +16,7 @@ Automatically generate a structured summary (`summary.json`) from customer inter
 
 ## 🧱 Project Structure
 
-```
-.
-├── .env
-├── .gitignore
-├── requirements.txt
-├── summarize.py
-├── interactions.txt
-├── summary.json
-├── .venv/
-└── .kiro/
-    └── hooks/
-        └── update-summary.kiro.hook
-```
-
----
+[WIP]
 
 ## ⚙️ Setup
 
@@ -58,10 +44,6 @@ source .venv/bin/activate
 
 ### 2. Install dependencies
 
-```bash
-pip install python-dotenv
-```
-
 
 ```bash
 pip install -r requirements.txt
@@ -81,7 +63,7 @@ SUMMARY_PRIORITY_RULES=true
 
 These variables control the behavior of the summarization logic.
 
----
+
 
 ## ▶️ Run manually
 
@@ -95,145 +77,233 @@ This will generate/update:
 summary.json
 ```
 
----
+📘 Setup do Banco + Dados (Mac / Linux / Windows)
+Objetivo
 
-## ⚡ Automation with Kiro Hook
+Subir um banco PostgreSQL com Docker e carregar dados de tickets para uso com agentes de IA.
 
-The hook automatically runs the summarization when `interactions.txt` is saved.
+Pré-requisitos
 
-### Hook location
+Você precisa ter:
 
-```
-.kiro/hooks/update-summary.kiro.hook
-```
+Docker instalado
+Python 3.9+
+pip
+(opcional) virtualenv / venv
+🐳 1. Instalar Docker
+🍎 Mac
 
-### Example
+👉 Baixar:
+https://www.docker.com/products/docker-desktop/
 
-```json
-{
-  "name": "Update Summary On Save",
-  "description": "Run summarize.py whenever interactions.txt is saved.",
-  "version": "1",
-  "when": {
-    "type": "fileSaved",
-    "patterns": ["interactions.txt"]
-  },
-  "then": {
-    "type": "runCommand",
-    "command": "python summarize.py"
-  }
-}
-```
+Passos:
 
----
+Baixar Docker Desktop
+Instalar e abrir
+Aguardar mensagem: Docker is running
 
-## 🧠 How This Demonstrates AI Systems
+🐧 Linux (Ubuntu)
+sudo apt update
+sudo apt install docker.io -y
 
-### 🟢 Assistant
+Iniciar serviço:
 
-Manual prompt:
+sudo systemctl start docker
+sudo systemctl enable docker
 
-> “Summarize interactions.txt”
+Permitir rodar sem sudo:
 
-* Reactive
-* No structure
-* No persistence
+sudo usermod -aG docker $USER
 
----
+👉 depois disso, reinicia o terminal
 
-### 🟡 Workflow
+🪟 Windows
 
-Hook + script:
+👉 Baixar:
+https://www.docker.com/products/docker-desktop/
 
-* Trigger: file save
-* Deterministic steps
-* Structured output (JSON)
+Requisitos:
 
----
+WSL2 ativado
 
-### 🔴 Agent (Next Step)
+Passos:
 
-To evolve into an agent:
+Instalar Docker Desktop
+Ativar WSL2 se necessário
+Abrir Docker Desktop
+Verificar se está rodando
+✅ 2. Validar Docker
+docker --version
+docker compose version
 
-* Compare previous vs new summary
-* Decide whether to update
-* Detect escalation
-* Trigger additional actions
+Se aparecer versão → OK
 
----
+📁 3. Arquivos
+[WIP]
+⚙️ 4. Configurar docker-compose.yml
 
-## 🧪 Example Input
+⚠️ IMPORTANTE: não usar version
 
-```
-Cliente: Meu pedido não chegou
-Cliente: Já faz 5 dias
-Cliente: Preciso de ajuda
-Agente: Estamos verificando
-Cliente: Ainda não resolveram
-Cliente: Quero cancelar
-```
+🚀 5. Subir o banco
+docker compose up -d
 
----
+🔍 6. Verificar se rodou
+docker ps
 
-## 📤 Example Output
+Você deve ver:
 
-```json
-{
-  "key_points": [
-    "Meu pedido não chegou.",
-    "Já faz 5 dias.",
-    "Preciso de ajuda.",
-    "Ainda não resolveram."
-  ],
-  "action_needed": "Verificar status do pedido e responder ao cliente.",
-  "sentiment": "negative",
-  "priority": "urgent"
-}
-```
+agentes_postgres   postgres:16   Up ...
+🧪 7. Acessar o banco
+docker exec -it agentes_postgres psql -U admin -d suporte_ai
 
----
+📊 8. Verificar tabelas
+Dentro do psql:
 
-## 🔁 Experiment
+\dt
 
-Change `.env`:
+Você deve ver:
 
-```env
-SUMMARY_MAX_POINTS=2
-```
+conversations
+agent_configs
+agent_runs
 
-Save `interactions.txt` again → observe output change.
+🐍 9. Criar ambiente Python
+Mac / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+Windows
+python -m venv .venv
+.venv\Scripts\activate
+📦 10. Instalar dependências
+pip install -r requirements.txt
 
----
 
-## 💡 Key Takeaways
+📥 11. Carregar dados
+python load_data.py ou python3 load_data.py
 
-* AI alone ≠ system
-* Workflows bring **structure and consistency**
-* Agents add **decision and autonomy**
-* Environment variables enable **configurable behavior**
-* Hooks enable **automation triggered by events**
+✅ 12. Validar dados
 
----
+Volte no psql:
 
-## 🚀 Next Steps
+SELECT COUNT(*) FROM conversations;
 
-* Add memory (store previous summaries)
-* Add validation layer
-* Integrate external APIs
-* Implement agent decision loop (ReAct / Planner)
+Se aparecer número > 0 → sucesso 🎉
 
----
+🔥 Problemas comuns (e soluções)
+❌ Erro: Docker não conecta
 
-## 📌 Notes
+👉 solução:
 
-* `.env` should not be committed
-* `.venv/` is local only
-* `summary.json` is generated
+abrir Docker Desktop
+verificar se está rodando
+❌ Erro: porta 5432 ocupada
 
----
+👉 solução:
+editar no compose:
 
-## 🧠 Teaching Insight
+ports:
+  - "5433:5432"
+❌ Erro: tabela não existe
 
-This project is designed to show that:
+👉 provável:
+init.sql não rodou
 
-> The same problem can evolve from a simple prompt to an intelligent system.
+👉 solução:
+
+docker compose down -v
+docker compose up -d
+❌ Erro ao puxar imagem (EOF)
+
+👉 solução:
+
+docker pull postgres:16
+
+ou trocar rede / desligar VPN
+
+
+# Agentes
+Path: /agentes_B2_S01-02/exemplos_exercicios/agentes/
+## exe1 - Para começarmos a entender
+### 🎯 Objetivo pedagógico
+
+Esse exercício tem como objetivo mostrar:
+
+Como estruturar um fluxo básico de agente
+Como organizar entrada → processamento → saída
+As limitações de abordagens puramente determinísticas
+
+Ele serve como base para comparação com versões mais avançadas, especialmente agentes com LLM, que conseguem lidar melhor com linguagem natural e ambiguidade.
+O primeiro exercício consiste na construção de um agente de suporte simples, baseado em regras fixas e sem uso de modelos de linguagem.
+
+### Funcionamento
+Esse agente recebe o ID de um ticket, recupera a conversa associada e executa três tarefas principais:
+
+a) Classifica a categoria do problema
+b) Verifica se é necessário follow-up
+c) Gera um resumo da conversa
+
+A lógica utilizada é determinística, baseada em palavras-chave. Por exemplo, termos como “login”, “senha” ou “acesso” classificam o ticket como problema de login, enquanto palavras como “pagamento” ou “cartão” indicam questões financeiras.
+
+⚙️ Características principais
+Não utiliza IA ou LLM
+Funciona com regras explícitas (if/else)
+Totalmente previsível e controlável
+Baixo custo computacional
+Fácil de entender e debugar
+
+⚠️ Limitações
+
+Apesar de funcional, esse agente apresenta limitações importantes:
+
+Depende de palavras exatas (não entende variações de linguagem)
+Não captura contexto ou intenção
+Difícil de escalar (regras crescem rapidamente)
+Pode falhar facilmente em casos ambíguos
+
+Para rodar, vá até a pasta e rode:
+python3 run_support_agent.py <ticket_id> ou python run_support_agent.py <ticket_id>
+
+🧠 Exercício 2 — Agente de Suporte com LLM e Tool Calling
+## 🎯 Objetivo pedagógico
+
+Este exercício mostra:
+
+- Como construir agentes com LLM
+- Como integrar ferramentas externas
+- Como lidar com saída estruturada
+- A importância de controle e validação em sistemas com IA
+
+No segundo exercício, evoluímos o agente de suporte para utilizar um modelo de linguagem (LLM) com capacidade de tomar decisões e acionar ferramentas dinamicamente.
+
+Em vez de seguir regras fixas, o agente passa a interpretar o contexto da conversa e decidir quais ações executar, como:
+
+a) Buscar a conversa do ticket
+b) Classificar a categoria
+c) Identificar necessidade de follow-up
+d) Gerar resumo
+
+Isso é feito através de tool calling, onde o modelo escolhe quais funções utilizar durante a execução.
+
+⚙️ Características principais
+Utiliza LLM (ex: Gemini)
+Capacidade de decisão dinâmica
+Integração com ferramentas (functions/tools)
+Suporte a saída estruturada (JSON)
+Mais flexível e adaptável
+
+🔄 Como funciona
+
+O fluxo do agente passa a ser:
+
+Usuário → LLM → decide qual tool chamar → executa tool → retorna resultado → LLM continua → resposta final
+
+Ou seja, o LLM atua como um orquestrador inteligente, não apenas como gerador de texto.
+
+### Melhorias em relação ao Exercício 1
+Entende variações de linguagem natural
+Não depende de palavras exatas
+Mais robusto para casos reais
+Reduz necessidade de regras manuais
+Mais fácil de escalar para novos cenários
+
+
