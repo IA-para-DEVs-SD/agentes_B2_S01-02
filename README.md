@@ -307,3 +307,77 @@ Reduz necessidade de regras manuais
 Mais fácil de escalar para novos cenários
 
 
+# Ferramenta para visualização dos dados
+
+Além do LLM e das tools, o exercício inclui um banco PostgreSQL local. Nesse caso, o DBeaver entra como apoio para explorar os tickets, validar consultas e enxergar de forma concreta como o agente interage com dados reais.
+
+💻 Como baixar e usar o DBeaver
+🧭 O que é o DBeaver
+
+O DBeaver é uma ferramenta para:
+
+conectar em bancos de dados
+visualizar tabelas
+rodar queries SQL
+explorar dados
+
+
+⬇️ 1. Download
+Acesse:
+👉 https://dbeaver.io/download/
+Escolha:
+DBeaver Community (gratuito)
+Baixe para seu sistema:
+Mac (.dmg)
+Windows (.exe)
+Linux
+⚙️ 2. Instalação
+Mac
+Abrir o .dmg
+Arrastar para Applications
+Windows
+Next → Next → Install
+
+👉 padrão, sem segredo
+
+🚀 3. Abrir e criar conexão
+Abrir o DBeaver
+Clicar em:
+👉 New Database Connection
+Escolher:
+👉 PostgreSQL
+🔌 4. Conectar no banco (Docker)
+
+Usando seu docker-compose, preenche assim:
+
+Host: localhost
+Port: 5432
+Database: suporte_ai
+Username: admin
+Password: admin123
+
+👉 Test Connection
+👉 Finish
+
+🧪 5. Ver os dados
+
+Depois de conectar:
+
+Expande:
+database → schemas → public → tables
+
+Você deve ver suas tabelas (ex: tickets)
+
+👉 Clica com botão direito → View Data
+
+💡 6. Rodar SQL (muito importante pra aula)
+
+Clique com botão direito → SQL Editor
+
+E roda:
+
+SELECT * FROM conversations;
+
+ou
+
+SELECT * FROM agent_runs;
