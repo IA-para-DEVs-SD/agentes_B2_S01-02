@@ -21,7 +21,7 @@ services:
     build: .
     container_name: agentes_app
     env_file:
-      - exemplos_exercicios/.env
+      - .env
     environment:
       DB_HOST: postgres
     volumes:
