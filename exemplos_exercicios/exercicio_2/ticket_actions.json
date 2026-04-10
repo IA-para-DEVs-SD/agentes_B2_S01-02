@@ -1,0 +1,102 @@
+[
+  {
+    "ticket_id": 1001,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1002,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1003,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1004,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1005,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1006,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1007,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1008,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1009,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1010,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1011,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1012,
+    "action": "no_action",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1013,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1014,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1015,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1016,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1017,
+    "action": "no_action",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1018,
+    "action": "send_follow_up",
+    "priority": "medium"
+  },
+  {
+    "ticket_id": 1019,
+    "action": "no_action",
+    "priority": "low"
+  },
+  {
+    "ticket_id": 1020,
+    "action": "no_action",
+    "priority": "low"
+  }
+]
