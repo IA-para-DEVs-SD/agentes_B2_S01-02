@@ -12,5 +12,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  qdrant:
+    image: qdrant/qdrant
+    container_name: agentes_qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
 volumes:
   postgres_data:
+  qdrant_data:

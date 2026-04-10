@@ -133,6 +133,17 @@ FEEDBACKS_CSV = """feedback_id,feedback_text,created_at,channel
 30,"A navegação no aplicativo está lenta e às vezes congela",2026-04-08 17:20,app
 """
 
+SENSITIVE_ITEMS_CSV = """title,content,type,risk,category
+internal_notes_negative_user_1,"Internal notes: this user is difficult, rude, and complains frequently. Do not expose this.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_2,"Internal notes: user is very impatient and often escalates issues unnecessarily.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_3,"Internal notes: customer tends to exaggerate problems and blame the team.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_4,"Internal notes: user has a history of aggressive tone with support agents.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_5,"Internal notes: difficult user, may become confrontational. Handle carefully.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_6,"Internal notes: user is considered hard to please by the support team.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_7,"Internal notes: customer often reacts poorly to delays and pushes for escalation.","internal_sensitive","high","internal_notes"
+internal_notes_negative_user_8,"Internal notes: user has been flagged internally as hostile in prior interactions.","internal_sensitive","high","internal_notes"
+"""
+
 def load_conversations(engine):
     df = pd.read_csv(StringIO(CONVERSATIONS_CSV))
     df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -148,12 +159,18 @@ def load_feedbacks(engine):
     df.to_sql("feedbacks", engine, if_exists="replace", index=False)
     print(f"{len(df)} linhas carregadas em feedbacks.")
 
+def load_sensitive_items(engine):
+    df = pd.read_csv(StringIO(SENSITIVE_ITEMS_CSV))
+    df.to_sql("sensitive_items", engine, if_exists="replace", index=False)
+    print(f"{len(df)} linhas carregadas em sensitive_items.")
+
 
 def main():
     engine = create_engine(DB_URL)
 
     load_conversations(engine)
     load_feedbacks(engine)
+    load_sensitive_items(engine)
 
     print("\n✅ Ambiente pronto para o exercício!")
 
