@@ -35,3 +35,34 @@ CREATE TABLE feedbacks (
     created_at TIMESTAMP,
     channel VARCHAR(20)
 );
+
+CREATE TABLE ticket_memory (
+    ticket_id INT PRIMARY KEY,
+    problem TEXT,
+    attempted_solutions TEXT[],
+    current_status TEXT,
+    last_client_message TEXT,
+    resolved BOOLEAN,
+    signals TEXT[],
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE sensitive_items (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        type TEXT NOT NULL,
+        risk TEXT NOT NULL,
+        category TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+CREATE TABLE internal_notes (
+    id SERIAL PRIMARY KEY,
+    ticket_id INT,
+    note_text TEXT NOT NULL,
+    note_status TEXT NOT NULL,
+    blocked_reason TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
