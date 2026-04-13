@@ -295,3 +295,4 @@ if __name__ == "__main__":
     result = analyze_without_history(message)
 
     print(json.dumps(result, indent=2, ensure_ascii=False))
+
