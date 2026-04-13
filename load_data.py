@@ -4,7 +4,8 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5432/suporte_ai"
+DB_PORT = os.getenv("DB_PORT", "5455")
+DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:{DB_PORT}/suporte_ai"
 
 
 CONVERSATIONS_CSV = """ticket_id,conversation_id,user_id,speaker,message,timestamp,ticket_status

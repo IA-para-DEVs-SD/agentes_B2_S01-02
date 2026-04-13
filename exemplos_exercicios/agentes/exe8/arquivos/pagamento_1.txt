@@ -1,0 +1,21 @@
+Tópico: pagamento
+Título: Troubleshooting common payment issues - Zendesk help
+URL: https://support.zendesk.com/hc/en-us/articles/9317629048730-Troubleshooting-common-payment-issues
+============================================================
+Troubleshooting common payment issues – Zendesk help
+
+There are some reasons why your payment may fail. This article describes some common payment issues and how to resolve them.
+
+This article contains the topics below:
+
+- Client-side payment method troubleshooting
+- 3D Secure payment method issues
+- I don't see the forms to update the payment method
+- Credit card payment fails
+- Credit card declined
+
+## Credit card declined
+
+### Symptoms
+
+I try to submit my credit card details, but I receive a 

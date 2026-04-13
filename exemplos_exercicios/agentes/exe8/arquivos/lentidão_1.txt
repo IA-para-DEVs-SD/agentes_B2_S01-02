@@ -1,0 +1,39 @@
+Tópico: lentidão
+Título: My dashboard is slow | Metabase Documentation
+URL: https://www.metabase.com/docs/latest/troubleshooting-guide/my-dashboard-is-slow
+============================================================
+My dashboard is slow | Metabase Documentation 
+
+Docs Learn
+
+##### Analytics
+
+Queries and charts
+
+Query builder
+
+- Editor
+- Filtering
+- Summarizing and grouping
+- Joining data
+- Custom expressions
+- List of expressions
+
+SQL and native queries
+
+- SQL editor
+- SQL parameters
+- Field filters
+- Basic SQL parameters
+- Time grouping parameters
+- Table variables
+- Optional variables
+- Filter widgets
+- Referencing models and questions
+- Snippets
+- Snippet folder permissions
+
+Visualizations
+
+- Overview
+- 

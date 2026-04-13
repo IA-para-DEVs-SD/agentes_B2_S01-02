@@ -1,0 +1,21 @@
+Tópico: travamento
+Título: GPU drivers crash with long computations (TDR crash)
+URL: https://experienceleague.adobe.com/en/docs/substance-3d-painter/using/technical-support/technical-issues/gpu-issues/gpu-drivers-crash-with-long-computations-tdr-crash
+============================================================
++------------------+
+| Back To Browsing |
++------------------+
+|  |
++------------------+
+
++-----------------------------------------------------------------+
+| Breadcrumbs |
++-----------------------------------------------------------------+
+| Documentation Substance 3D |
++-----------------------------------------------------------------+
+
+# GPU drivers crash with long computations (TDR crash)
+
++------------------------------------------------------------------------------+
+| Article Metadata |
+

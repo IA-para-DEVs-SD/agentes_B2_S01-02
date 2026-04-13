@@ -1,0 +1,22 @@
+Tópico: pagamento
+Título: Pagamenti non riusciti? Ecco cosa fare | Stripe
+URL: https://stripe.com/it-ch/resources/more/failed-payment-recovery-101
+============================================================
+Pagamenti non riusciti? Ecco cosa fare | Stripe
+
+Inizia ora Contattaci
+
+Payments
+
+Accetta pagamenti online, di persona e in tutto il mondo con una soluzione di pagamento sviluppata per qualsiasi tipo di attività, dalle start-up in espansione alle società internazionali.
+
+Ulteriori informazioni
+
+Cause comuni dei pagamenti non riusciti
+
+1. Motivi legati al cliente
+2. Motivi legati all’attività
+3. Motivi legati all’elaboratore di pagamento
+4. Altri fatores
+
+Come affrontare il recupero dei pagamenti

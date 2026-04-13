@@ -1,0 +1,15 @@
+Tópico: lentidão
+Título: Por que o Zendesk é lento quando trabalho em casa? – Ajuda do Zendesk
+URL: https://support.zendesk.com/hc/pt-br/articles/4408820121114-Por-que-o-Zendesk-%C3%A9-lento-quando-trabalho-em-casa-Como-fa%C3%A7o-para-corrigir-isso
+============================================================
+Por que o Zendesk é lento quando trabalho em casa? – Ajuda do Zendesk
+
+## Pergunta
+
+O carregamento do Zendesk é lento e atrasa quando trabalho remotamente. Estou tendo muitos problemas de desempenho. Como corrijo isso?
+
+## Resposta
+
+Se o Zendesk estiver lento e não houver incidentes de serviço ativos, você pode tentar resolver alguns problemas sozinho.
+
+Primeiro, identifique a causa raiz do problema. É um problema de conectividade de rede? Um problema de hardware? Ou talvez um problema com o nav

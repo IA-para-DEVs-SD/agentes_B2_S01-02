@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text
 import json
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5432/suporte_ai"
+DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5455/suporte_ai"
 engine = create_engine(DB_URL)
 
 

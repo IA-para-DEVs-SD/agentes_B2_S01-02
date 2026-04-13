@@ -1,0 +1,12 @@
+Tópico: pagamento
+Título: Risoluzione dei problemi comuni di pagamento – Aiuto Zendesk
+URL: https://support.zendesk.com/hc/it/articles/9317629048730-Risoluzione-dei-problemi-comuni-di-pagamento
+============================================================
+Risoluzione dei problemi comuni di pagamento – Aiuto Zendesk 
+Ci sono alcuni motivi per cui il pagamento potrebbe non andare a buon fine. Questo articolo descrive alcuni problemi di pagamento comuni e come risolverli.
+Questo articolo contiene i seguenti argomenti.
+* Carta di credito rifiutata
+* Pagamento con carta di credito non riuscito
+* Non vedo i moduli per aggiornare il metodo di pagamento
+* Problemi con il metodo di pagamento 3D Secure
+* Risoluzione dei problemi relativi al metodo di pagam
