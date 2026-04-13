@@ -9,7 +9,7 @@ load_dotenv()
 # Inicializa cliente Claude
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-DB_URL = "postgresql+psycopg2://admin:admin123@localhost:5432/suporte_ai"
+DB_URL = "postgresql+psycopg2://admin:admin123@localhost:5433/suporte_ai"
 engine = create_engine(DB_URL)
 
 # =========================================================

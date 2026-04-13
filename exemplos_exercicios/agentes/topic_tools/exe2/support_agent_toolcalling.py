@@ -1,18 +1,39 @@
 import json
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from langfuse import observe
+from langfuse.openai import openai
 
 from tools import TOOL_MAP, save_agent_run
 
-load_dotenv()
+
+def find_env():
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        env_file = parent / ".env"
+        if env_file.exists():
+            return env_file
+    raise FileNotFoundError(".env não encontrado")
+
+
+env_path = find_env()
+print("env_path:", env_path)
+
+load_dotenv(env_path, override=True)
+
+print("OPENAI:", (os.getenv("OPENAI_API_KEY") or "")[:10] + "...")
+print("LANGFUSE_PUBLIC_KEY:", (os.getenv("LANGFUSE_PUBLIC_KEY") or "")[:10] + "...")
+print("LANGFUSE_SECRET_KEY:", (os.getenv("LANGFUSE_SECRET_KEY") or "")[:10] + "...")
+print("BASE:", os.getenv("LANGFUSE_BASE_URL"))
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 class SupportTicketAgentToolCalling:
-
     def __init__(self):
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = openai
 
         self.tools = [
             {
@@ -65,6 +86,7 @@ class SupportTicketAgentToolCalling:
             }
         ]
 
+    @observe()
     def run(self, ticket_id: int) -> str:
         response = self.client.responses.create(
             model="gpt-4.1-mini",
@@ -75,6 +97,9 @@ class SupportTicketAgentToolCalling:
                 "Use as tools quando necessário.\n"
                 "No final, devolva um JSON válido com estas chaves:\n"
                 "ticket_id, categoria, resumo, precisa_followup, motivo_followup, status_sugerido.\n\n"
+                "A categoria deve ser EXATAMENTE uma destas opções:\n"
+                "login, pagamento, entrega, cancelamento, conta, outros.\n"
+                "Não reescreva a categoria.\n\n"
                 f"Analise o ticket {ticket_id}."
             )
         )
@@ -123,3 +148,10 @@ class SupportTicketAgentToolCalling:
                 previous_response_id=response.id,
                 input=tool_outputs
             )
+
+
+if __name__ == "__main__":
+    agent = SupportTicketAgentToolCalling()
+    result = agent.run(1001)
+    print("\n=== RESULTADO TOOL CALLING ===")
+    print(result)

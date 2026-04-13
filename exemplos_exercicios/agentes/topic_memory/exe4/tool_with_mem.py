@@ -7,16 +7,14 @@ from google.genai import types
 
 load_dotenv()
 
-# ⚠️ Ajuste senha se necessário
-
-DB_URL = "postgresql+psycopg2://admin:admin123@localhost:5432/suporte_ai"
-engine = create_engine(DB_URL)
-
 # Inicializa cliente Gemini
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+DB_URL = "postgresql+psycopg2://admin:admin123@localhost:5433/suporte_ai"
+engine = create_engine(DB_URL)
+
 # =========================================================
-# TOOL 1: GET CONVERSATION (MEMÓRIA - NÃO USADA NO EXEMPLO 1)
+# TOOL 1: GET CONVERSATION (MEMÓRIA)
 # =========================================================
 
 
@@ -51,7 +49,7 @@ def get_ticket_conversation(ticket_id: int) -> dict:
 
 
 # =========================================================
-# TOOL 2: CLASSIFICAÇÃO (LLM)
+# TOOL 2: CLASSIFICAÇÃO
 # =========================================================
 
 
@@ -108,8 +106,7 @@ Conversa:
         }
 
     except Exception as e:
-        print("Erro classify_category:", e)
-
+        print("Erro classify_category_prompt:", e)
         return {
             "categoria": "outros",
             "metodo": "fallback_erro"
@@ -117,21 +114,36 @@ Conversa:
 
 
 # =========================================================
-# TOOL 3: ANALYZE WITHOUT HISTORY (🔥 PRINCIPAL AQUI)
+# TOOL 3: ANALYZE WITH MEMORY
 # =========================================================
 
 
-def analyze_without_history(message: str) -> dict:
+def analyze_with_memory(ticket_id: int, new_message: str) -> dict:
+    conversation = get_ticket_conversation(ticket_id)
+
+    if not conversation["found"]:
+        return {
+            "ticket_id": ticket_id,
+            "categoria": "outros",
+            "resumo": "Nenhum histórico encontrado para o ticket.",
+            "acao_recomendada": "Analisar a nova mensagem isoladamente ou verificar se o ticket existe.",
+            "observacao": "Análise com memória solicitada, mas sem histórico disponível.",
+            "metodo": "sem_historico_disponivel"
+        }
+
+    conversation_text = conversation["conversation_text"]
+
     prompt = f"""
 Você é um analista de suporte ao cliente.
 
-Analise apenas a mensagem abaixo, SEM considerar histórico anterior.
+Analise a NOVA mensagem considerando o HISTÓRICO do ticket.
 
 Sua tarefa é:
-1. Identificar a categoria do problema
-2. Resumir o problema
-3. Sugerir a primeira ação
-4. Explicitar que não há histórico
+1. Identificar a categoria principal do caso
+2. Resumir o problema atual considerando o histórico
+3. Dizer o que já parece ter sido tentado ou informado antes
+4. Sugerir a próxima ação recomendada
+5. Explicitar que a análise foi feita com histórico
 
 Categorias possíveis:
 - acesso
@@ -144,11 +156,15 @@ Categorias possíveis:
 Responda em JSON com:
 - categoria
 - resumo
-- acao_inicial
+- contexto_relevante
+- acao_recomendada
 - observacao
 
-Mensagem:
-{message}
+Histórico do ticket:
+{conversation_text}
+
+Nova mensagem:
+{new_message}
 """
 
     try:
@@ -172,13 +188,15 @@ Mensagem:
                             ]
                         },
                         "resumo": {"type": "string"},
-                        "acao_inicial": {"type": "string"},
+                        "contexto_relevante": {"type": "string"},
+                        "acao_recomendada": {"type": "string"},
                         "observacao": {"type": "string"}
                     },
                     "required": [
                         "categoria",
                         "resumo",
-                        "acao_inicial",
+                        "contexto_relevante",
+                        "acao_recomendada",
                         "observacao"
                     ]
                 },
@@ -189,21 +207,25 @@ Mensagem:
         result = json.loads(response.text)
 
         return {
+            "ticket_id": ticket_id,
             "categoria": result["categoria"],
             "resumo": result["resumo"],
-            "acao_inicial": result["acao_inicial"],
+            "contexto_relevante": result["contexto_relevante"],
+            "acao_recomendada": result["acao_recomendada"],
             "observacao": result["observacao"],
-            "metodo": "llm_sem_historico"
+            "metodo": "llm_com_historico"
         }
 
     except Exception as e:
-        print("Erro analyze_without_history:", e)
+        print("Erro analyze_with_memory:", e)
 
         return {
+            "ticket_id": ticket_id,
             "categoria": "outros",
-            "resumo": "Não foi possível analisar a mensagem isoladamente.",
-            "acao_inicial": "Solicitar mais informações ao cliente.",
-            "observacao": "Análise sem histórico (fallback por erro).",
+            "resumo": "Não foi possível analisar a mensagem com histórico.",
+            "contexto_relevante": "Histórico recuperado, mas houve erro na análise.",
+            "acao_recomendada": "Reexecutar a análise ou revisar o prompt/modelo.",
+            "observacao": "Análise com histórico, fallback por erro.",
             "metodo": "fallback_erro"
         }
 
@@ -278,20 +300,29 @@ TOOL_MAP = {
     "get_ticket_conversation": get_ticket_conversation,
     "classify_category_prompt": classify_category_prompt,
     "detect_followup": detect_followup,
-    "analyze_without_history": analyze_without_history,
+    "analyze_with_memory": analyze_with_memory,
 }
 
 # =========================================================
-# MAIN (EXEMPLO SEM HISTÓRICO)
+# MAIN (EXEMPLO COM MEMÓRIA)
 # =========================================================
 
 if __name__ == "__main__":
-    message = "me ajuda? eu estou sem acesso à minha conta, tentei logar, nada funciona"
+    ticket_id = 1001
+    new_message = "Agora apareceu que minha conta está bloqueada"
 
     print("\n==============================")
-    print("ANÁLISE 1 - SEM HISTÓRICO")
+    print("ANÁLISE 2 - COM HISTÓRICO")
     print("==============================\n")
 
-    result = analyze_without_history(message)
+    result = analyze_with_memory(ticket_id, new_message)
 
     print(json.dumps(result, indent=2, ensure_ascii=False))
+
+    # opcional: salvar execução
+    save_agent_run(
+        agent_name="analyze_with_memory",
+        ticket_id=ticket_id,
+        input_text=new_message,
+        output_text=result
+    )

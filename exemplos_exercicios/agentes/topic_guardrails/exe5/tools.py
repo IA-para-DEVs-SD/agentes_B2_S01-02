@@ -35,7 +35,7 @@ def search_feedbacks(query: str, engine) -> list[dict]:
 
 def load_sensitive_items(engine) -> pd.DataFrame:
     return pd.read_sql("SELECT * FROM sensitive_items", engine)
-
+p
 
 def retrieve_candidate_items(user_input: str, engine) -> list[dict]:
     text = user_input.lower()

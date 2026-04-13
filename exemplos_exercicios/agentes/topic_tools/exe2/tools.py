@@ -1,6 +1,10 @@
 import os
 from sqlalchemy import create_engine, text
 import json
+import os
+
+from google import genai
+from google.genai import types
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5432/suporte_ai"
@@ -36,35 +40,15 @@ def get_ticket_conversation(ticket_id: int) -> dict:
         "conversation_text": conversation_text
     }
 
-'''
-def classify_category(conversation_text: str) -> dict:
-    text_lower = conversation_text.lower()
-
-    if "login" in text_lower or "senha" in text_lower or "acessar" in text_lower:
-        categoria = "login"
-    elif "pagamento" in text_lower or "cartão" in text_lower:
-        categoria = "pagamento"
-    elif "entrega" in text_lower or "transportadora" in text_lower:
-        categoria = "entrega"
-    elif "cancelar" in text_lower or "cancelamento" in text_lower:
-        categoria = "cancelamento"
-    elif "conta" in text_lower:
-        categoria = "conta"
-    else:
-        categoria = "outros"
-
-    return {
-        "categoria": categoria,
-        "metodo": "regra_simples"
-    }
-'''
 
 def classify_category_prompt(conversation_text: str) -> dict:
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
     prompt = f"""
 Você é um classificador de tickets de suporte.
 
 Classifique a conversa em apenas uma das categorias abaixo:
-- acesso
+- login
 - pagamento
 - entrega
 - cancelamento
@@ -89,7 +73,7 @@ Conversa:
                         "categoria": {
                             "type": "string",
                             "enum": [
-                                "acesso",
+                                "login",
                                 "pagamento",
                                 "entrega",
                                 "cancelamento",
@@ -100,8 +84,8 @@ Conversa:
                     },
                     "required": ["categoria"]
                 },
-                temperature=0.1
-            )
+                temperature=0.1,
+            ),
         )
 
         result = json.loads(response.text)
@@ -113,11 +97,11 @@ Conversa:
 
     except Exception as e:
         print("Erro classify_category:", e)
-
         return {
             "categoria": "outros",
             "metodo": "fallback_erro"
         }
+
 
 def detect_followup(conversation_text: str) -> dict:
     lines = [line.strip() for line in conversation_text.split("\n") if line.strip()]

@@ -9,7 +9,7 @@ def get_connection():
     user="admin",
     password="admin123",
     host="localhost",
-    port="5432"
+    port="5433"
     )
 
 # INSERIR MENSAGEM (WRITE)
