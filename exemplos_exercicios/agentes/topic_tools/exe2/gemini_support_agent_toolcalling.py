@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from langfuse import observe
 
 from tools import TOOL_MAP, save_agent_run
 
@@ -11,7 +12,6 @@ load_dotenv()
 
 
 class SupportTicketAgentToolCalling:
-
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -65,6 +65,7 @@ class SupportTicketAgentToolCalling:
             temperature=0.2,
         )
 
+    @observe()  # 🔥 aqui está a mágica do Langfuse
     def run(self, ticket_id: int) -> str:
         conversation_for_log = ""
 
@@ -82,9 +83,7 @@ class SupportTicketAgentToolCalling:
                             "motivo_followup, status_sugerido.\n\n"
                             "A categoria deve ser EXATAMENTE uma destas opções:\n"
                             "login, pagamento, entrega, cancelamento, conta, outros.\n"
-                            "Não reescreva a categoria. Não use valores como "
-                            "'Problema de login', 'Erro de pagamento' ou similares.\n\n"
-                            "Retorne quais tools vc usou\n"
+                            "Não reescreva a categoria.\n\n"
                             f"Analise o ticket {ticket_id}."
                         )
                     )
@@ -120,7 +119,6 @@ class SupportTicketAgentToolCalling:
 
                 return final_text
 
-            # Importante: adiciona a resposta do modelo ao histórico
             contents.append(candidate.content)
 
             function_response_parts = []
@@ -141,10 +139,15 @@ class SupportTicketAgentToolCalling:
                     )
                 )
 
-            # Devolve os resultados das funções ao modelo
             contents.append(
                 types.Content(
                     role="user",
                     parts=function_response_parts,
                 )
             )
+
+
+if __name__ == "__main__":
+    agent = SupportTicketAgentToolCalling()
+    result = agent.run(1001)
+    print(result)

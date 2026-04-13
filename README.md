@@ -381,3 +381,14 @@ SELECT * FROM conversations;
 ou
 
 SELECT * FROM agent_runs;
+
+Qdrant - http://localhost:6333/dashboard#/console
+
+Rodar o langfuse
+chmod +x start_langfuse.sh
+./start_langfuse.sh
+
+
+
+Caso docker compose down e docker compose up -d não resolver
+docker rm -f agentes_pgadmin agentes_postgres agentes_qdrant
