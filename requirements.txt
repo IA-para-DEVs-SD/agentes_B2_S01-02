@@ -8,4 +8,4 @@ google-genai==1.47.0
 exa-py
 qdrant-client
 sentence-transformers
-langfuse
+openai-agents
