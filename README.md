@@ -16,17 +16,99 @@ Automatically generate a structured summary (`summary.json`) from customer inter
 
 ## 🧱 Project Structure
 
-[WIP]
+```
+.
+├── Dockerfile
+├── .dockerignore
+├── docker-compose.yml
+├── init.sql
+├── load_data.py
+├── requirements.txt
+├── .env (em exemplos_exercicios/)
+├── exemplos_exercicios/
+│   ├── .env
+│   ├── exemplos/
+│   ├── exercicio_1/
+│   ├── exercicio_2/
+│   └── agentes/
+│       ├── exe1/   # Agente baseado em regras
+│       ├── exe2/   # Agente com LLM e tool calling
+│       └── exe3/   # Análise de feedbacks com Gemini
+└── .kiro/
+    ├── hooks/
+    └── steering/
+```
+
+---
 
 ## ⚙️ Setup
 
-### 1. Create virtual environment
+### Pré-requisitos
+
+- Docker e Docker Compose instalados
+- Chaves de API configuradas no `.env` (Anthropic, OpenAI, Gemini)
+
+---
+
+### 🐳 Setup com Docker (recomendado)
+
+Todo o ambiente (banco + app Python) roda em containers. Não precisa de venv, pip install, nem versão específica de Python na máquina.
+
+#### 1. Subir tudo
+
+```bash
+docker compose up -d
+```
+
+Isso sobe:
+- `agentes_postgres` — PostgreSQL 16 com banco `suporte_ai`
+- `agentes_app` — Python 3.12 com todas as dependências instaladas
+
+O serviço `app` só inicia quando o Postgres estiver pronto (healthcheck).
+
+#### 2. Carregar dados no banco
+
+```bash
+docker compose exec app python load_data.py
+```
+
+#### 3. Rodar scripts
+
+```bash
+docker compose exec app python exemplos_exercicios/agentes/exe1/run_support_agent.py
+```
+
+#### 4. Shell interativo
+
+```bash
+docker compose exec app bash
+```
+
+Dentro do container, rode qualquer script normalmente.
+
+#### 5. Parar tudo
+
+```bash
+docker compose down
+```
+
+Para remover também os dados do banco:
+
+```bash
+docker compose down -v
+```
+
+---
+
+### 🐍 Setup local (alternativa sem Docker)
+
+Se preferir rodar sem Docker, você precisa de Python 3.9+ e um PostgreSQL rodando na porta 5432.
+
+#### 1. Criar ambiente virtual
 
 ```bash
 python -m venv .venv
 ```
-
-Activate:
 
 **Mac/Linux**
 
@@ -40,185 +122,77 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
----
-
-### 2. Install dependencies
-
+#### 2. Instalar dependências
 
 ```bash
 pip install -r requirements.txt
+```
+
+#### 3. Subir apenas o banco via Docker
+
+```bash
+docker compose up -d postgres
+```
+
+#### 4. Carregar dados
+
+```bash
+python load_data.py
+```
+
+#### 5. Rodar scripts
+
+```bash
+python exemplos_exercicios/agentes/exe1/run_support_agent.py
 ```
 
 ---
 
 ## 🔐 Environment Variables
 
-Create a `.env` file:
+O arquivo `exemplos_exercicios/.env` deve conter:
 
 ```env
 SUMMARY_MAX_POINTS=4
 SUMMARY_SENTIMENT=true
 SUMMARY_PRIORITY_RULES=true
+ANTHROPIC_API_KEY=sua-chave-aqui
+OPENAI_API_KEY=sua-chave-aqui
+GEMINI_API_KEY=sua-chave-aqui
 ```
 
-These variables control the behavior of the summarization logic.
+No setup Docker, o `env_file` do compose já carrega essas variáveis automaticamente no container.
 
+---
 
+## 📊 Verificar o banco
 
-## ▶️ Run manually
+### Via Docker
 
 ```bash
-python summarize.py
-```
-
-This will generate/update:
-
-```
-summary.json
-```
-
-📘 Setup do Banco + Dados (Mac / Linux / Windows)
-Objetivo
-
-Subir um banco PostgreSQL com Docker e carregar dados de tickets para uso com agentes de IA.
-
-Pré-requisitos
-
-Você precisa ter:
-
-Docker instalado
-Python 3.9+
-pip
-(opcional) virtualenv / venv
-🐳 1. Instalar Docker
-🍎 Mac
-
-👉 Baixar:
-https://www.docker.com/products/docker-desktop/
-
-Passos:
-
-Baixar Docker Desktop
-Instalar e abrir
-Aguardar mensagem: Docker is running
-
-🐧 Linux (Ubuntu)
-sudo apt update
-sudo apt install docker.io -y
-
-Iniciar serviço:
-
-sudo systemctl start docker
-sudo systemctl enable docker
-
-Permitir rodar sem sudo:
-
-sudo usermod -aG docker $USER
-
-👉 depois disso, reinicia o terminal
-
-🪟 Windows
-
-👉 Baixar:
-https://www.docker.com/products/docker-desktop/
-
-Requisitos:
-
-WSL2 ativado
-
-Passos:
-
-Instalar Docker Desktop
-Ativar WSL2 se necessário
-Abrir Docker Desktop
-Verificar se está rodando
-✅ 2. Validar Docker
-docker --version
-docker compose version
-
-Se aparecer versão → OK
-
-📁 3. Arquivos
-[WIP]
-⚙️ 4. Configurar docker-compose.yml
-
-⚠️ IMPORTANTE: não usar version
-
-🚀 5. Subir o banco
-docker compose up -d
-
-🔍 6. Verificar se rodou
-docker ps
-
-Você deve ver:
-
-agentes_postgres   postgres:16   Up ...
-🧪 7. Acessar o banco
 docker exec -it agentes_postgres psql -U admin -d suporte_ai
+```
 
-📊 8. Verificar tabelas
 Dentro do psql:
 
+```sql
 \dt
-
-Você deve ver:
-
-conversations
-agent_configs
-agent_runs
-
-🐍 9. Criar ambiente Python
-Mac / Linux
-python3 -m venv .venv
-source .venv/bin/activate
-Windows
-python -m venv .venv
-.venv\Scripts\activate
-📦 10. Instalar dependências
-pip install -r requirements.txt
-
-
-📥 11. Carregar dados
-python load_data.py ou python3 load_data.py
-
-✅ 12. Validar dados
-
-Volte no psql:
-
 SELECT COUNT(*) FROM conversations;
+SELECT COUNT(*) FROM feedbacks;
+```
 
-Se aparecer número > 0 → sucesso 🎉
+Tabelas esperadas: `conversations`, `agent_configs`, `agent_runs`, `feedbacks`
 
-🔥 Problemas comuns (e soluções)
-❌ Erro: Docker não conecta
+---
 
-👉 solução:
+## 🔥 Problemas comuns
 
-abrir Docker Desktop
-verificar se está rodando
-❌ Erro: porta 5432 ocupada
-
-👉 solução:
-editar no compose:
-
-ports:
-  - "5433:5432"
-❌ Erro: tabela não existe
-
-👉 provável:
-init.sql não rodou
-
-👉 solução:
-
-docker compose down -v
-docker compose up -d
-❌ Erro ao puxar imagem (EOF)
-
-👉 solução:
-
-docker pull postgres:16
-
-ou trocar rede / desligar VPN
+| Problema | Solução |
+|---|---|
+| Docker não conecta | Abrir Docker Desktop e verificar se está rodando |
+| Porta 5432 ocupada | Alterar no compose: `"5433:5432"` |
+| Tabela não existe | `docker compose down -v` e subir novamente |
+| Erro ao puxar imagem | `docker pull postgres:16` ou desligar VPN |
 
 
 # Agentes

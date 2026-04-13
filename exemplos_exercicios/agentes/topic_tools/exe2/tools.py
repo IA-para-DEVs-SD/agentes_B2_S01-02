@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine, text
 import json
 import os
@@ -5,7 +6,8 @@ import os
 from google import genai
 from google.genai import types
 
-DB_URL = "postgresql+psycopg2://admin:admin123@localhost:5433/suporte_ai"
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5432/suporte_ai"
 engine = create_engine(DB_URL)
 
 
