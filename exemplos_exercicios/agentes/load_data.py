@@ -4,7 +4,7 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5432/suporte_ai"
+DB_URL = f"postgresql+psycopg2://admin:admin123@{DB_HOST}:5433/suporte_ai"
 
 
 CONVERSATIONS_CSV = """ticket_id,conversation_id,user_id,speaker,message,timestamp,ticket_status
@@ -146,6 +146,21 @@ internal_notes_negative_user_7,"Internal notes: customer often reacts poorly to 
 internal_notes_negative_user_8,"Internal notes: user has been flagged internally as hostile in prior interactions.","internal_sensitive","high","internal_notes"
 """
 
+BACKLOG_CSV = """titulo,responsavel,status,prioridade,story_points,dias_em_aberto,bugs_relacionados,sprint
+Ajustar login,Ana,Em progresso,Alta,5,8,2,Sprint 1
+Corrigir pagamento,Bruno,A fazer,Alta,8,12,5,Sprint 1
+Melhorar dashboard,Carla,Em progresso,Média,3,15,1,Sprint 1
+Refatorar API,Diego,Bloqueado,Alta,13,10,4,Sprint 1
+Atualizar FAQ,Ana,Concluído,Baixa,2,2,0,Sprint 1
+Criar endpoint de clientes,Bruno,Em progresso,Alta,8,6,3,Sprint 1
+Ajustar layout mobile,Carla,A fazer,Média,5,9,1,Sprint 1
+"""
+
+def load_backlog(engine):
+    df = pd.read_csv(StringIO(BACKLOG_CSV))
+    df.to_sql("backlog", engine, if_exists="replace", index=False)
+    print(f"{len(df)} linhas carregadas em backlog.")
+
 def load_conversations(engine):
     df = pd.read_csv(StringIO(CONVERSATIONS_CSV))
     df["timestamp"] = pd.to_datetime(df["timestamp"])
@@ -173,6 +188,7 @@ def main():
     load_conversations(engine)
     load_feedbacks(engine)
     load_sensitive_items(engine)
+    load_backlog(engine)
 
     print("\n✅ Ambiente pronto para o exercício!")
 
