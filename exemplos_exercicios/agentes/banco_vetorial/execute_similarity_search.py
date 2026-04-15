@@ -8,16 +8,16 @@ POSTGRES_CONFIG = {
     "database": "suporte_ai",
     "user": "admin",
     "password": "admin123",
-    "port": 5432,
+    "port": 5433,
 }
 
 COLLECTION_NAME = "kb_chunks"
 VECTOR_SIZE = 256  # pode aumentar para 384 ou 512 depois
 qdrant = QdrantClient(host="localhost", port=6333, check_compatibility=False)
 
-vectorizer = HashingVectorizer(
-    n_features=VECTOR_SIZE,
-    alternate_sign=False,
+vectorizer = HashingVectorizer( #tranforma texto em números
+    n_features=VECTOR_SIZE, #tamanho do verto final
+    alternate_sign=False, # se valores podem ser negativos
     norm="l2"
 )
 
@@ -42,6 +42,6 @@ def search(query: str):
         )
 
 if __name__ == "__main__":
-    search("problema de pagamento")
-    #search("não consigo entrar na conta")
+    #search("problema de pagamento")
+    search("login")
     #search("política de reembolso")

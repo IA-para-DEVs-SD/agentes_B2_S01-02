@@ -1,3 +1,16 @@
+CREATE TABLE IF NOT EXISTS backlog (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL,
+    responsavel VARCHAR(100),
+    status VARCHAR(50) NOT NULL,
+    prioridade VARCHAR(20) NOT NULL,
+    story_points INTEGER,
+    dias_em_aberto INTEGER DEFAULT 0,
+    bugs_relacionados INTEGER DEFAULT 0,
+    sprint VARCHAR(50),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS conversations (
     id SERIAL PRIMARY KEY,
     ticket_id INT NOT NULL,
@@ -71,19 +84,6 @@ CREATE TABLE IF NOT EXISTS tickets (
     cliente VARCHAR(100),
     mensagem TEXT,
     categoria VARCHAR(50),
-    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS backlog (
-    id SERIAL PRIMARY KEY,
-    titulo VARCHAR(200) NOT NULL,
-    responsavel VARCHAR(100),
-    status VARCHAR(50) NOT NULL,
-    prioridade VARCHAR(20) NOT NULL,
-    story_points INTEGER,
-    dias_em_aberto INTEGER DEFAULT 0,
-    bugs_relacionados INTEGER DEFAULT 0,
-    sprint VARCHAR(50),
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -65,7 +65,7 @@ class SupportTicketAgentToolCalling:
             temperature=0.2,
         )
 
-    @observe()  # 🔥 aqui está a mágica do Langfuse
+    @observe()  # Langfuse
     def run(self, ticket_id: int) -> str:
         conversation_for_log = ""
 
