@@ -40,8 +40,6 @@ def insert_message(conn, msg):
             print(f"❌ Erro ao inserir: {e}")
 
 
-
-
 if __name__ == "__main__":
     conn = get_connection()
     # nova mensagem chegando
@@ -51,7 +49,7 @@ if __name__ == "__main__":
         "user_id": 101,
         "speaker": "client",
         "message": "Agora apareceu que minha conta está bloqueada",
-        "timestamp": "2026-04-01 09:07:00",
+        "timestamp": "2026-04-15 09:07:00",
         "ticket_status": "open"
     }
 
