@@ -1,42 +1,74 @@
-# 🤖 Customer Interaction Summarizer (Kiro Demo)
+# 🤖 Agentes de IA - Curso Prático
 
-This project demonstrates the evolution from **Assistant → Workflow → Agent**, using a simple and realistic use case: summarizing customer interactions.
-
----
-
-## 🎯 Objective
-
-Automatically generate a structured summary (`summary.json`) from customer interactions (`interactions.txt`), using:
-
-* Python script
-* Environment variables (`.env`)
-* Kiro hook for automation
+> Repositório de exemplos e exercícios práticos sobre desenvolvimento de agentes de IA, desde regras simples até sistemas complexos com LLMs.
 
 ---
 
-## 🧱 Project Structure
+## 📚 Índice
+
+- [Visão Geral](#-visão-geral)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Setup](#️-setup)
+- [Exercícios](#-exercícios)
+- [Ferramentas](#-ferramentas)
+- [Troubleshooting](#-troubleshooting)
+
+---
+
+## 🎯 Visão Geral
+
+Este projeto demonstra a evolução de sistemas de IA:
+
+```
+Assistant → Workflow → Agent
+```
+
+Usando um caso de uso realista: **sistema de suporte ao cliente** com análise automática de tickets.
+
+### Tecnologias
+
+- 🐍 Python 3.9+
+- 🐘 PostgreSQL 16
+- 🤖 LLMs (Anthropic Claude, OpenAI, Google Gemini)
+- 🔍 Qdrant (banco vetorial)
+- 📊 Langfuse (observabilidade)
+- 🐳 Docker & Docker Compose
+
+---
+
+## 🧱 Estrutura do Projeto
 
 ```
 .
-├── Dockerfile
-├── .dockerignore
-├── docker-compose.yml
-├── init.sql
-├── load_data.py
-├── requirements.txt
-├── .env (em exemplos_exercicios/)
-├── exemplos_exercicios/
-│   ├── .env
-│   ├── exemplos/
-│   ├── exercicio_1/
-│   ├── exercicio_2/
-│   └── agentes/
-│       ├── exe1/   # Agente baseado em regras
-│       ├── exe2/   # Agente com LLM e tool calling
-│       └── exe3/   # Análise de feedbacks com Gemini
-└── .kiro/
-    ├── hooks/
-    └── steering/
+├── 📄 Dockerfile
+├── 📄 docker-compose.yml
+├── 📄 init.sql
+├── 📄 load_data.py
+├── 📄 requirements.txt
+├── 📁 exemplos_exercicios/
+│   ├── 📁 exemplos/          # Exemplos de código
+│   ├── 📁 exercicio_1/       # Análise de métricas
+│   ├── 📁 exercicio_2/       # Classificação de conversas
+│   └── 📁 agentes/
+│       ├── 📁 topic_tools/
+│       │   ├── exe1/         # Agente baseado em regras
+│       │   ├── exe2/         # Agente com LLM + tool calling
+│       │   └── exe3/         # Análise de feedbacks
+│       ├── 📁 topic_memory/
+│       │   └── exe4/         # Agentes com/sem memória
+│       ├── 📁 topic_guardrails/
+│       │   ├── exe5/         # Guardrails e validação
+│       │   └── exe6/         # Guardrails avançados
+│       ├── 📁 topic_exa_search/
+│       │   ├── exe7/         # Busca externa com Exa
+│       │   └── exe8/         # Busca avançada
+│       ├── 📁 banco_vetorial/ # Qdrant + embeddings
+│       ├── 📁 planner/        # Agente planejador
+│       └── 📁 react/          # Agente ReAct
+└── 📁 .kiro/
+    ├── hooks/                # Automações
+    └── steering/             # Regras e contexto
+
 ```
 
 ---
@@ -45,16 +77,14 @@ Automatically generate a structured summary (`summary.json`) from customer inter
 
 ### Pré-requisitos
 
-- Docker e Docker Compose instalados
-- Chaves de API configuradas no `.env` (Anthropic, OpenAI, Gemini)
+- ✅ Docker e Docker Compose instalados
+- ✅ Chaves de API configuradas no `.env`
 
----
+### 🐳 Setup com Docker (Recomendado)
 
-### 🐳 Setup com Docker (recomendado)
+Todo o ambiente roda em containers. Não precisa de venv, pip install, nem versão específica de Python na máquina.
 
-Todo o ambiente (banco + app Python) roda em containers. Não precisa de venv, pip install, nem versão específica de Python na máquina.
-
-#### 1. Subir tudo
+#### 1️⃣ Subir os serviços
 
 ```bash
 docker compose up -d
@@ -62,37 +92,35 @@ docker compose up -d
 
 Isso sobe:
 - `agentes_postgres` — PostgreSQL 16 com banco `suporte_ai`
-- `agentes_app` — Python 3.12 com todas as dependências instaladas
+- `agentes_qdrant` — Banco vetorial Qdrant
+- `agentes_pgadmin` — Interface web para PostgreSQL
+- `agentes_app` — Python 3.12 com todas as dependências
 
-O serviço `app` só inicia quando o Postgres estiver pronto (healthcheck).
-
-#### 2. Carregar dados no banco
+#### 2️⃣ Carregar dados no banco
 
 ```bash
 docker compose exec app python load_data.py
 ```
 
-#### 3. Rodar scripts
+#### 3️⃣ Rodar scripts
 
 ```bash
-docker compose exec app python exemplos_exercicios/agentes/exe1/run_support_agent.py
+docker compose exec app python exemplos_exercicios/agentes/topic_tools/exe1/run_support_agent.py
 ```
 
-#### 4. Shell interativo
+#### 4️⃣ Shell interativo
 
 ```bash
 docker compose exec app bash
 ```
 
-Dentro do container, rode qualquer script normalmente.
-
-#### 5. Parar tudo
+#### 5️⃣ Parar tudo
 
 ```bash
 docker compose down
 ```
 
-Para remover também os dados do banco:
+Para remover também os dados:
 
 ```bash
 docker compose down -v
@@ -100,269 +128,296 @@ docker compose down -v
 
 ---
 
-### 🐍 Setup local (alternativa sem Docker)
+### 🐍 Setup Local (Alternativa)
 
-Se preferir rodar sem Docker, você precisa de Python 3.9+ e um PostgreSQL rodando na porta 5432.
+Se preferir rodar sem Docker, você precisa de Python 3.9+ e PostgreSQL rodando na porta 5432.
 
-#### 1. Criar ambiente virtual
+#### 1️⃣ Criar ambiente virtual
 
 ```bash
 python -m venv .venv
 ```
 
-**Mac/Linux**
-
+**Mac/Linux:**
 ```bash
 source .venv/bin/activate
 ```
 
-**Windows**
-
+**Windows:**
 ```bash
 .venv\Scripts\activate
 ```
 
-#### 2. Instalar dependências
+#### 2️⃣ Instalar dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 3. Subir apenas o banco via Docker
+#### 3️⃣ Subir apenas o banco via Docker
 
 ```bash
-docker compose up -d postgres
+docker compose up -d postgres qdrant
 ```
 
-#### 4. Carregar dados
+#### 4️⃣ Carregar dados
 
 ```bash
 python load_data.py
 ```
 
-#### 5. Rodar scripts
+#### 5️⃣ Rodar scripts
 
 ```bash
-python exemplos_exercicios/agentes/exe1/run_support_agent.py
+python exemplos_exercicios/agentes/topic_tools/exe1/run_support_agent.py
 ```
 
 ---
 
-## 🔐 Environment Variables
+## 🔐 Variáveis de Ambiente
 
-O arquivo `exemplos_exercicios/.env` deve conter:
+Crie um arquivo `.env` na raiz do projeto:
 
 ```env
+# Configurações gerais
 SUMMARY_MAX_POINTS=4
 SUMMARY_SENTIMENT=true
 SUMMARY_PRIORITY_RULES=true
+
+# APIs de LLM
 ANTHROPIC_API_KEY=sua-chave-aqui
 OPENAI_API_KEY=sua-chave-aqui
 GEMINI_API_KEY=sua-chave-aqui
-```
 
-No setup Docker, o `env_file` do compose já carrega essas variáveis automaticamente no container.
+# Exa Search
+EXA_API_KEY=sua-chave-aqui
+
+# Langfuse (observabilidade)
+LANGFUSE_PUBLIC_KEY=sua-chave-aqui
+LANGFUSE_SECRET_KEY=sua-chave-aqui
+LANGFUSE_BASE_URL=http://localhost:3000
+```
 
 ---
 
-## 📊 Verificar o banco
+## 🎓 Exercícios
 
-### Via Docker
+### 📘 Exercício 1 - Agente Baseado em Regras
 
+**Objetivo:** Entender a estrutura básica de um agente e suas limitações.
+
+**Características:**
+- ✅ Não utiliza IA ou LLM
+- ✅ Funciona com regras explícitas (if/else)
+- ✅ Totalmente previsível e controlável
+- ✅ Baixo custo computacional
+- ✅ Fácil de entender e debugar
+
+**Limitações:**
+- ❌ Depende de palavras exatas
+- ❌ Não captura contexto ou intenção
+- ❌ Difícil de escalar
+- ❌ Falha em casos ambíguos
+
+**Como rodar:**
 ```bash
-docker exec -it agentes_postgres psql -U admin -d suporte_ai
+python exemplos_exercicios/agentes/topic_tools/exe1/run_support_agent.py <ticket_id>
 ```
-
-Dentro do psql:
-
-```sql
-\dt
-SELECT COUNT(*) FROM conversations;
-SELECT COUNT(*) FROM feedbacks;
-```
-
-Tabelas esperadas: `conversations`, `agent_configs`, `agent_runs`, `feedbacks`
 
 ---
 
-## 🔥 Problemas comuns
+### 📗 Exercício 2 - Agente com LLM + Tool Calling
+
+**Objetivo:** Construir agentes inteligentes que tomam decisões e acionam ferramentas.
+
+**Características:**
+- ✅ Utiliza LLM (Gemini/Claude)
+- ✅ Capacidade de decisão dinâmica
+- ✅ Integração com ferramentas (tool calling)
+- ✅ Suporte a saída estruturada (JSON)
+- ✅ Mais flexível e adaptável
+
+**Melhorias em relação ao Exercício 1:**
+- ✨ Entende variações de linguagem natural
+- ✨ Não depende de palavras exatas
+- ✨ Mais robusto para casos reais
+- ✨ Reduz necessidade de regras manuais
+- ✨ Mais fácil de escalar
+
+**Como rodar:**
+```bash
+python exemplos_exercicios/agentes/topic_tools/exe2/run_support_agent.py <ticket_id>
+```
+
+---
+
+### 📙 Exercício 3 - Análise de Feedbacks
+
+**Objetivo:** Processar e analisar feedbacks de clientes usando LLM.
+
+**Como rodar:**
+```bash
+cd exemplos_exercicios/agentes/topic_tools/exe3
+python run_feedback_analysis.py
+```
+
+---
+
+### 📕 Exercício 4 - Memória em Agentes
+
+**Objetivo:** Comparar agentes com e sem memória de contexto.
+
+**Arquivos:**
+- `tool_no_mem.py` - Análise sem histórico
+- `tool_with_mem.py` - Análise com histórico (Gemini)
+- `tool_with_mem_claude.py` - Análise com histórico (Claude)
+
+**Como rodar:**
+```bash
+cd exemplos_exercicios/agentes/topic_memory/exe4
+python tool_no_mem.py
+python tool_with_mem_claude.py
+```
+
+---
+
+### 📔 Exercício 5 - Guardrails
+
+**Objetivo:** Implementar validações e controles de segurança em agentes.
+
+**Como rodar:**
+```bash
+cd exemplos_exercicios/agentes/topic_guardrails/exe5
+python run_guardrail_agent.py
+```
+
+---
+
+### 📓 Exercício 7 - Busca Externa com Exa
+
+**Objetivo:** Integrar busca externa de informações usando Exa AI.
+
+**Como rodar:**
+```bash
+cd exemplos_exercicios/agentes/topic_exa_search/exe7
+python test_exa.py
+```
+
+---
+
+## 🛠 Ferramentas
+
+### 🗄️ DBeaver - Visualização de Dados
+
+Interface gráfica para explorar o banco PostgreSQL.
+
+**Download:** https://dbeaver.io/download/
+
+**Configuração de conexão:**
+- Host: `localhost`
+- Port: `5432`
+- Database: `suporte_ai`
+- Username: `admin`
+- Password: `admin123`
+
+**Queries úteis:**
+```sql
+-- Ver todas as conversas
+SELECT * FROM conversations;
+
+-- Ver execuções do agente
+SELECT * FROM agent_runs;
+
+-- Ver feedbacks
+SELECT * FROM feedbacks;
+
+-- Contar tickets por status
+SELECT ticket_status, COUNT(*) 
+FROM conversations 
+GROUP BY ticket_status;
+```
+
+---
+
+### 🔍 Qdrant Dashboard
+
+Interface web para o banco vetorial.
+
+**Acesso:** http://localhost:6333/dashboard
+
+**Popular a base:**
+```bash
+python exemplos_exercicios/agentes/banco_vetorial/load_to_qdrant.py
+```
+
+**Executar busca:**
+```bash
+python exemplos_exercicios/agentes/banco_vetorial/execute_similarity_search.py
+```
+
+---
+
+### 📊 Langfuse - Observabilidade
+
+Ferramenta para monitorar e debugar agentes de IA.
+
+**Iniciar:**
+```bash
+chmod +x start_langfuse.sh
+./start_langfuse.sh
+```
+
+**Acesso:** http://localhost:3000
+
+---
+
+## 🔥 Troubleshooting
 
 | Problema | Solução |
-|---|---|
+|----------|---------|
 | Docker não conecta | Abrir Docker Desktop e verificar se está rodando |
 | Porta 5432 ocupada | Alterar no compose: `"5433:5432"` |
 | Tabela não existe | `docker compose down -v` e subir novamente |
 | Erro ao puxar imagem | `docker pull postgres:16` ou desligar VPN |
+| Containers não param | `docker rm -f agentes_pgadmin agentes_postgres agentes_qdrant` |
+| Erro de permissão | `chmod +x start_langfuse.sh` |
 
+---
 
-# Agentes
-Path: /agentes_B2_S01-02/exemplos_exercicios/agentes/
-## exe1 - Para começarmos a entender
-### 🎯 Objetivo pedagógico
+### 📊 Verificar o Banco
 
-Esse exercício tem como objetivo mostrar:
+**Via Docker:**
+```bash
+docker exec -it agentes_postgres psql -U admin -d suporte_ai
+```
 
-Como estruturar um fluxo básico de agente
-Como organizar entrada → processamento → saída
-As limitações de abordagens puramente determinísticas
+**Dentro do psql:**
+```sql
+\dt                              -- Listar tabelas
+SELECT COUNT(*) FROM conversations;
+SELECT COUNT(*) FROM feedbacks;
+\q                               -- Sair
+```
 
-Ele serve como base para comparação com versões mais avançadas, especialmente agentes com LLM, que conseguem lidar melhor com linguagem natural e ambiguidade.
-O primeiro exercício consiste na construção de um agente de suporte simples, baseado em regras fixas e sem uso de modelos de linguagem.
+**Tabelas esperadas:**
+- `conversations`
+- `agent_configs`
+- `agent_runs`
+- `feedbacks`
+- `tickets`
 
-### Funcionamento
-Esse agente recebe o ID de um ticket, recupera a conversa associada e executa três tarefas principais:
+---
 
-a) Classifica a categoria do problema
-b) Verifica se é necessário follow-up
-c) Gera um resumo da conversa
+## 📝 Licença
 
-A lógica utilizada é determinística, baseada em palavras-chave. Por exemplo, termos como “login”, “senha” ou “acesso” classificam o ticket como problema de login, enquanto palavras como “pagamento” ou “cartão” indicam questões financeiras.
+MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-⚙️ Características principais
-Não utiliza IA ou LLM
-Funciona com regras explícitas (if/else)
-Totalmente previsível e controlável
-Baixo custo computacional
-Fácil de entender e debugar
+---
 
-⚠️ Limitações
+## 🤝 Contribuindo
 
-Apesar de funcional, esse agente apresenta limitações importantes:
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
 
-Depende de palavras exatas (não entende variações de linguagem)
-Não captura contexto ou intenção
-Difícil de escalar (regras crescem rapidamente)
-Pode falhar facilmente em casos ambíguos
+---
 
-Para rodar, vá até a pasta e rode:
-python3 run_support_agent.py <ticket_id> ou python run_support_agent.py <ticket_id>
-
-🧠 Exercício 2 — Agente de Suporte com LLM e Tool Calling
-## 🎯 Objetivo pedagógico
-
-Este exercício mostra:
-
-- Como construir agentes com LLM
-- Como integrar ferramentas externas
-- Como lidar com saída estruturada
-- A importância de controle e validação em sistemas com IA
-
-No segundo exercício, evoluímos o agente de suporte para utilizar um modelo de linguagem (LLM) com capacidade de tomar decisões e acionar ferramentas dinamicamente.
-
-Em vez de seguir regras fixas, o agente passa a interpretar o contexto da conversa e decidir quais ações executar, como:
-
-a) Buscar a conversa do ticket
-b) Classificar a categoria
-c) Identificar necessidade de follow-up
-d) Gerar resumo
-
-Isso é feito através de tool calling, onde o modelo escolhe quais funções utilizar durante a execução.
-
-⚙️ Características principais
-Utiliza LLM (ex: Gemini)
-Capacidade de decisão dinâmica
-Integração com ferramentas (functions/tools)
-Suporte a saída estruturada (JSON)
-Mais flexível e adaptável
-
-🔄 Como funciona
-
-O fluxo do agente passa a ser:
-
-Usuário → LLM → decide qual tool chamar → executa tool → retorna resultado → LLM continua → resposta final
-
-Ou seja, o LLM atua como um orquestrador inteligente, não apenas como gerador de texto.
-
-### Melhorias em relação ao Exercício 1
-Entende variações de linguagem natural
-Não depende de palavras exatas
-Mais robusto para casos reais
-Reduz necessidade de regras manuais
-Mais fácil de escalar para novos cenários
-
-
-# Ferramenta para visualização dos dados
-
-Além do LLM e das tools, o exercício inclui um banco PostgreSQL local. Nesse caso, o DBeaver entra como apoio para explorar os tickets, validar consultas e enxergar de forma concreta como o agente interage com dados reais.
-
-💻 Como baixar e usar o DBeaver
-🧭 O que é o DBeaver
-
-O DBeaver é uma ferramenta para:
-
-conectar em bancos de dados
-visualizar tabelas
-rodar queries SQL
-explorar dados
-
-
-⬇️ 1. Download
-Acesse:
-👉 https://dbeaver.io/download/
-Escolha:
-DBeaver Community (gratuito)
-Baixe para seu sistema:
-Mac (.dmg)
-Windows (.exe)
-Linux
-⚙️ 2. Instalação
-Mac
-Abrir o .dmg
-Arrastar para Applications
-Windows
-Next → Next → Install
-
-👉 padrão, sem segredo
-
-🚀 3. Abrir e criar conexão
-Abrir o DBeaver
-Clicar em:
-👉 New Database Connection
-Escolher:
-👉 PostgreSQL
-🔌 4. Conectar no banco (Docker)
-
-Usando seu docker-compose, preenche assim:
-
-Host: localhost
-Port: 5432
-Database: suporte_ai
-Username: admin
-Password: admin123
-
-👉 Test Connection
-👉 Finish
-
-🧪 5. Ver os dados
-
-Depois de conectar:
-
-Expande:
-database → schemas → public → tables
-
-Você deve ver suas tabelas (ex: tickets)
-
-👉 Clica com botão direito → View Data
-
-💡 6. Rodar SQL (muito importante pra aula)
-
-Clique com botão direito → SQL Editor
-
-E roda:
-
-SELECT * FROM conversations;
-
-ou
-
-SELECT * FROM agent_runs;
-
-Qdrant - http://localhost:6333/dashboard#/console
-
-Rodar o langfuse
-chmod +x start_langfuse.sh
-./start_langfuse.sh
-
-
-
-Caso docker compose down e docker compose up -d não resolver
-docker rm -f agentes_pgadmin agentes_postgres agentes_qdrant
+**Desenvolvido com ❤️ para o curso de Agentes de IA**

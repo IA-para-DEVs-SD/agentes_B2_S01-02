@@ -5,7 +5,7 @@ sqlalchemy==2.0.49
 psycopg2-binary==2.9.11
 openai==2.31.0
 google-genai==1.47.0
-exa-py
-qdrant-client
-sentence-transformers
-openai-agents
+exa-py==2.11.0
+qdrant-client==1.17.1
+sentence-transformers==5.4.1
+openai-agents==0.13.6

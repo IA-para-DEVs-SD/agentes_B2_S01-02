@@ -122,66 +122,97 @@ SELECT * FROM (
     ('Fernanda', 'Sistema está muito lento', 'performance')
 ) AS v(cliente, mensagem, categoria)
 WHERE NOT EXISTS (SELECT 1 FROM tickets);
-
 INSERT INTO knowledge_bases (name, description)
 VALUES
-('support_kb', 'Problemas comuns de suporte'),
-('policy_kb', 'Políticas internas'),
-('product_faq', 'FAQ do produto')
+(
+    'support_kb',
+    'Base de conhecimento com problemas comuns de suporte ao usuário, incluindo dificuldades de login, erros de pagamento, lentidão do sistema e falhas no aplicativo.'
+),
+(
+    'policy_kb',
+    'Base com políticas internas e regras do sistema, incluindo reembolso, segurança da conta e privacidade de dados, usada para orientar decisões e validações.'
+),
+(
+    'product_faq',
+    'Perguntas frequentes sobre o produto e uso do aplicativo, incluindo criação de conta, funcionalidades básicas e requisitos do sistema.'
+)
 ON CONFLICT (name) DO NOTHING;
 
+
 INSERT INTO kb_documents (kb_id, title, source)
-SELECT kb.id, v.title, v.source
+SELECT
+    kb.id,
+    v.title,
+    v.source
 FROM (
     VALUES
-    ('support_kb', 'Erros de pagamento', 'manual'),
-    ('support_kb', 'Problemas de login', 'manual'),
-    ('support_kb', 'Lentidão no sistema', 'manual'),
-    ('support_kb', 'Falhas no app mobile', 'manual'),
-    ('policy_kb', 'Política de reembolso', 'manual'),
-    ('policy_kb', 'Política de segurança', 'manual'),
-    ('policy_kb', 'Privacidade de dados', 'manual'),
-    ('product_faq', 'FAQ App Mobile', 'manual'),
-    ('product_faq', 'FAQ Conta e Cadastro', 'manual')
+        ('support_kb', 'Erros de pagamento', 'manual'),
+        ('support_kb', 'Problemas de login', 'manual'),
+        ('support_kb', 'Lentidão no sistema', 'manual'),
+        ('support_kb', 'Falhas no app mobile', 'manual'),
+        ('policy_kb', 'Política de reembolso', 'manual'),
+        ('policy_kb', 'Política de segurança', 'manual'),
+        ('policy_kb', 'Privacidade de dados', 'manual'),
+        ('product_faq', 'FAQ App Mobile', 'manual'),
+        ('product_faq', 'FAQ Conta e Cadastro', 'manual')
 ) AS v(kb_name, title, source)
-JOIN knowledge_bases kb ON kb.name = v.kb_name
+JOIN knowledge_bases kb
+    ON kb.name = v.kb_name
 WHERE NOT EXISTS (
     SELECT 1
     FROM kb_documents d
-    WHERE d.kb_id = kb.id AND d.title = v.title
+    WHERE d.kb_id = kb.id
+      AND d.title = v.title
 );
 
+
 INSERT INTO kb_chunks (document_id, chunk_order, content, metadata)
-SELECT d.id, v.chunk_order, v.content, v.metadata::jsonb
+SELECT
+    d.id,
+    v.chunk_order,
+    v.content,
+    v.metadata::jsonb
 FROM (
     VALUES
-    ('Erros de pagamento', 1, 'Cobrança duplicada pode ocorrer por falha na confirmação da transação.', '{"categoria":"pagamento"}'),
-    ('Erros de pagamento', 2, 'Sempre verificar o histórico antes de solicitar estorno.', '{"categoria":"pagamento"}'),
-    ('Erros de pagamento', 3, 'Falhas podem ocorrer por timeout ou recusa da operadora.', '{"categoria":"pagamento"}'),
-    ('Problemas de login', 1, 'Usuários devem verificar e-mail e senha antes de redefinir acesso.', '{"categoria":"login"}'),
-    ('Problemas de login', 2, 'Bloqueios temporários ocorrem após múltiplas tentativas inválidas.', '{"categoria":"login"}'),
-    ('Problemas de login', 3, 'Recuperação de senha deve ser feita via e-mail cadastrado.', '{"categoria":"login"}'),
-    ('Lentidão no sistema', 1, 'Sistema pode ficar lento em horários de pico.', '{"categoria":"performance"}'),
-    ('Lentidão no sistema', 2, 'Recomenda-se verificar conexão do usuário.', '{"categoria":"performance"}'),
-    ('Lentidão no sistema', 3, 'Cache local pode impactar performance do app.', '{"categoria":"performance"}'),
-    ('Falhas no app mobile', 1, 'Problemas podem ocorrer em versões antigas do aplicativo.', '{"categoria":"mobile"}'),
-    ('Falhas no app mobile', 2, 'Atualizar o app pode resolver a maioria dos erros.', '{"categoria":"mobile"}'),
-    ('Falhas no app mobile', 3, 'Falhas de sincronização podem ocorrer sem internet.', '{"categoria":"mobile"}'),
-    ('Política de reembolso', 1, 'Reembolsos podem ser solicitados em até 7 dias.', '{"categoria":"policy"}'),
-    ('Política de reembolso', 2, 'Casos excepcionais devem ser avaliados manualmente.', '{"categoria":"policy"}'),
-    ('Política de segurança', 1, 'Usuários devem manter suas credenciais seguras.', '{"categoria":"security"}'),
-    ('Política de segurança', 2, 'Não compartilhar senhas com terceiros.', '{"categoria":"security"}'),
-    ('Privacidade de dados', 1, 'Dados pessoais são protegidos conforme LGPD.', '{"categoria":"privacy"}'),
-    ('Privacidade de dados', 2, 'Usuários podem solicitar exclusão de dados.', '{"categoria":"privacy"}'),
-    ('FAQ App Mobile', 1, 'App disponível para Android e iOS.', '{"categoria":"faq"}'),
-    ('FAQ App Mobile', 2, 'Requer conexão com internet.', '{"categoria":"faq"}'),
-    ('FAQ Conta e Cadastro', 1, 'Cadastro requer e-mail válido.', '{"categoria":"faq"}'),
-    ('FAQ Conta e Cadastro', 2, 'Conta pode ser excluída pelo suporte.', '{"categoria":"faq"}')
-) AS v(title, chunk_order, content, metadata)
-JOIN kb_documents d ON d.title = v.title
+        ('support_kb', 'Erros de pagamento', 1, 'Cobrança duplicada pode acontecer quando há falha na confirmação da transação ou múltiplas tentativas de pagamento. Antes de solicitar estorno, verifique o histórico completo da conta.', '{"categoria":"pagamento","tipo":"kb"}'),
+        ('support_kb', 'Erros de pagamento', 2, 'Timeout durante a transação pode causar incerteza no usuário, mesmo quando a operadora processa o pagamento. Oriente aguardar alguns minutos antes de tentar novamente.', '{"categoria":"pagamento","tipo":"kb"}'),
+        ('support_kb', 'Erros de pagamento', 3, 'Recusas de pagamento podem ocorrer por limites do cartão ou bloqueios da operadora. Sempre validar com o usuário antes de abrir chamado.', '{"categoria":"pagamento","tipo":"kb"}'),
+
+        ('support_kb', 'Problemas de login', 1, 'Se o usuário não conseguir acessar a conta, confirme e-mail, senha e possíveis erros de digitação antes de iniciar recuperação.', '{"categoria":"login","tipo":"kb"}'),
+        ('support_kb', 'Problemas de login', 2, 'Bloqueios temporários acontecem após várias tentativas inválidas. Nesses casos, o usuário deve aguardar ou seguir o fluxo de recuperação.', '{"categoria":"login","tipo":"kb"}'),
+        ('support_kb', 'Problemas de login', 3, 'Recuperação de senha deve ser feita pelo e-mail cadastrado. Caso não tenha acesso, será necessário validar identidade.', '{"categoria":"login","tipo":"kb"}'),
+
+        ('support_kb', 'Lentidão no sistema', 1, 'O sistema pode apresentar lentidão em horários de pico devido ao alto volume de acessos simultâneos.', '{"categoria":"performance","tipo":"kb"}'),
+        ('support_kb', 'Lentidão no sistema', 2, 'Verifique conexão, navegador e dispositivo do usuário, pois problemas locais podem impactar a performance.', '{"categoria":"performance","tipo":"kb"}'),
+        ('support_kb', 'Lentidão no sistema', 3, 'Cache acumulado pode afetar o desempenho. Recomenda-se limpeza e novo teste.', '{"categoria":"performance","tipo":"kb"}'),
+
+        ('support_kb', 'Falhas no app mobile', 1, 'Versões antigas do aplicativo podem causar erros. Confirmar versão instalada e sistema operacional.', '{"categoria":"mobile","tipo":"kb"}'),
+        ('support_kb', 'Falhas no app mobile', 2, 'Atualizar o aplicativo resolve a maioria dos problemas relacionados a compatibilidade e sincronização.', '{"categoria":"mobile","tipo":"kb"}'),
+        ('support_kb', 'Falhas no app mobile', 3, 'Falhas de sincronização podem ocorrer sem conexão estável com a internet.', '{"categoria":"mobile","tipo":"kb"}'),
+
+        ('policy_kb', 'Política de reembolso', 1, 'Reembolsos podem ser solicitados dentro do prazo definido pela política vigente, mediante validação do pagamento.', '{"categoria":"policy","tipo":"policy"}'),
+        ('policy_kb', 'Política de reembolso', 2, 'Casos excepcionais devem ser analisados manualmente com base em evidências e histórico.', '{"categoria":"policy","tipo":"policy"}'),
+
+        ('policy_kb', 'Política de segurança', 1, 'Usuários devem manter credenciais seguras e não compartilhar senhas com terceiros.', '{"categoria":"security","tipo":"policy"}'),
+        ('policy_kb', 'Política de segurança', 2, 'Atividades suspeitas devem ser tratadas com prioridade e podem exigir redefinição de acesso.', '{"categoria":"security","tipo":"policy"}'),
+
+        ('policy_kb', 'Privacidade de dados', 1, 'Dados pessoais são tratados conforme LGPD e políticas internas de privacidade.', '{"categoria":"privacy","tipo":"policy"}'),
+        ('policy_kb', 'Privacidade de dados', 2, 'Usuários podem solicitar exclusão de dados, respeitando obrigações legais.', '{"categoria":"privacy","tipo":"policy"}'),
+
+        ('product_faq', 'FAQ App Mobile', 1, 'O aplicativo está disponível para Android e iOS e requer conexão com internet.', '{"categoria":"faq","tipo":"faq"}'),
+        ('product_faq', 'FAQ App Mobile', 2, 'Para melhor desempenho, manter o app sempre atualizado.', '{"categoria":"faq","tipo":"faq"}'),
+
+        ('product_faq', 'FAQ Conta e Cadastro', 1, 'O cadastro requer e-mail válido e acesso ao mesmo para validação.', '{"categoria":"faq","tipo":"faq"}'),
+        ('product_faq', 'FAQ Conta e Cadastro', 2, 'A conta pode ser excluída mediante solicitação ao suporte.', '{"categoria":"faq","tipo":"faq"}')
+) AS v(kb_name, title, chunk_order, content, metadata)
+JOIN knowledge_bases kb
+    ON kb.name = v.kb_name
+JOIN kb_documents d
+    ON d.kb_id = kb.id
+   AND d.title = v.title
 WHERE NOT EXISTS (
     SELECT 1
     FROM kb_chunks c
-    WHERE c.document_id = d.id AND c.chunk_order = v.chunk_order
+    WHERE c.document_id = d.id
+      AND c.chunk_order = v.chunk_order
 );
-
