@@ -1,7 +1,7 @@
 import psycopg2
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
-from sklearn.feature_extraction.text import HashingVectorizer
+from sentence_transformers import SentenceTransformer
 
 POSTGRES_CONFIG = {
     "host": "localhost",
@@ -12,97 +12,128 @@ POSTGRES_CONFIG = {
 }
 
 COLLECTION_NAME = "kb_chunks"
-VECTOR_SIZE = 256  # pode aumentar para 384 ou 512 depois
+MODEL_NAME = "all-MiniLM-L6-v2"
+VECTOR_SIZE = 384
 
-vectorizer = HashingVectorizer(
-    n_features=VECTOR_SIZE,
-    alternate_sign=False,
-    norm="l2"
+qdrant = QdrantClient(
+    host="localhost",
+    port=6333,
+    check_compatibility=False,
 )
 
-def connect_postgres():
-    return psycopg2.connect(**POSTGRES_CONFIG)
+model = SentenceTransformer(MODEL_NAME)
 
-qdrant = QdrantClient(host="localhost", port=6333, check_compatibility=False)
 
-def embed(text: str):
-    vec = vectorizer.transform([text])
-    return vec.toarray()[0].astype(float).tolist()
+def embed(text: str) -> list[float]:
+    return model.encode(text).tolist()
 
-def ensure_collection():
-    if qdrant.collection_exists(COLLECTION_NAME):
-        return
-    qdrant.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE),
-    )
 
-def fetch_kb_chunks():
-    conn = connect_postgres()
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT
-            c.id,
-            kb.name,
-            d.title,
-            c.chunk_order,
-            c.content
-        FROM kb_chunks c
-        JOIN kb_documents d
-            ON c.document_id = d.id
-        JOIN knowledge_bases kb
-            ON d.kb_id = kb.id
-        ORDER BY c.id
-    """)
-    rows = cursor.fetchall()
-    cursor.close()
+def fetch_chunks():
+    conn = psycopg2.connect(**POSTGRES_CONFIG)
+    cur = conn.cursor()
+
+    query = """
+    SELECT
+        c.id AS chunk_id,
+        kb.name AS kb_name,
+        d.title,
+        c.chunk_order,
+        c.content,
+        c.metadata
+    FROM kb_chunks c
+    JOIN kb_documents d
+        ON c.document_id = d.id
+    JOIN knowledge_bases kb
+        ON d.kb_id = kb.id
+    ORDER BY d.id, c.chunk_order;
+    """
+
+    cur.execute(query)
+    rows = cur.fetchall()
+
+    cur.close()
     conn.close()
+
     return rows
 
-def load_to_qdrant():
-    rows = fetch_kb_chunks()
+
+def recreate_collection():
+    existing = [c.name for c in qdrant.get_collections().collections]
+
+    if COLLECTION_NAME in existing:
+        qdrant.delete_collection(collection_name=COLLECTION_NAME)
+
+    qdrant.create_collection(
+        collection_name=COLLECTION_NAME,
+        vectors_config=VectorParams(
+            size=VECTOR_SIZE,
+            distance=Distance.COSINE,
+        ),
+    )
+
+    print(f"✅ Collection '{COLLECTION_NAME}' criada com vetor de {VECTOR_SIZE} dimensões.")
+
+
+def build_points(rows):
     points = []
 
-    for chunk_id, kb_name, title, chunk_order, content in rows:
+    for row in rows:
+        chunk_id, kb_name, title, chunk_order, content, metadata = row
+
         vector = embed(content)
+
+        payload = {
+            "kb_name": kb_name,
+            "title": title,
+            "chunk_order": chunk_order,
+            "content": content,
+            "metadata": metadata if metadata else {},
+        }
+
         points.append(
             PointStruct(
                 id=chunk_id,
                 vector=vector,
-                payload={
-                    "kb_name": kb_name,
-                    "title": title,
-                    "chunk_order": chunk_order,
-                    "content": content,
-                },
+                payload=payload,
             )
         )
 
-    qdrant.upsert(
-        collection_name=COLLECTION_NAME,
-        points=points,
-    )
-    print(f"✅ {len(points)} chunks enviados para o Qdrant.")
+    return points
 
-def search(query: str):
-    query_vector = embed(query)
-    results = qdrant.query_points(
-        collection_name=COLLECTION_NAME,
-        query=query_vector,
-        limit=5,
-    ).points
 
-    print(f"\n🔎 Busca: {query}")
-    for r in results:
-        print(
-            f"- [{r.payload['kb_name']}] {r.payload['title']} "
-            f"(chunk {r.payload['chunk_order']}) | "
-            f"{r.payload['content']} | score={r.score:.3f}"
+def upload_points(points, batch_size: int = 100):
+    total = len(points)
+
+    for i in range(0, total, batch_size):
+        batch = points[i:i + batch_size]
+        qdrant.upsert(
+            collection_name=COLLECTION_NAME,
+            points=batch,
         )
+        print(f"⬆️ Enviados {min(i + batch_size, total)}/{total} pontos")
+
+
+def main():
+    print("📥 Lendo chunks do Postgres...")
+    rows = fetch_chunks()
+
+    if not rows:
+        print("⚠️ Nenhum chunk encontrado no Postgres.")
+        return
+
+    print(f"✅ {len(rows)} chunks encontrados.")
+
+    print("🧱 Recriando collection no Qdrant...")
+    recreate_collection()
+
+    print("🧠 Gerando embeddings...")
+    points = build_points(rows)
+
+    print("🚀 Enviando pontos para o Qdrant...")
+    upload_points(points)
+
+    print("✅ Indexação concluída com sucesso.")
+
 
 if __name__ == "__main__":
-    ensure_collection()
-    load_to_qdrant()
-    search("problema de pagamento")
-    search("não consigo entrar na conta")
-    search("política de reembolso")
+    main()
