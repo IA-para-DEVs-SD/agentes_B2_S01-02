@@ -141,6 +141,8 @@ celerybeat.pid
 .env
 .envrc
 .venv
+.venv312/
+venv12/
 env/
 venv/
 ENV/
@@ -211,3 +213,6 @@ __marimo__/
 
 langfuse
 langfuse/*
+
+.venv312
+.venv312/*
