@@ -1,18 +1,34 @@
 # Agente 03 - Auditor de Qualidade
 
 ## O que faz
-Valida e pontua a qualidade dos requisitos identificados.
+Recebe os outputs dos Agentes 01 e 02, valida consistência e pontua a qualidade dos artefatos.
 
 ## Input
-- Requisitos do Agente 02
-- Tarefas do Agente 01
+- Backlog técnico (JSON do Agente 01)
+- Documento de requisitos (JSON do Agente 02)
 
-## Output
-- Score de qualidade (0-100)
-- Lista de gaps identificados
-- Sugestões de melhoria
-- Requisitos faltantes
+## Output (JSON)
+- `audit_summary` — resumo da auditoria
+- `consistency_check` — status e problemas encontrados
+- `gaps` — lacunas com severidade
+- `quality_score` — score total e breakdown por critério
+- `suggestions` — sugestões de melhoria
+- `missing_requirements` — requisitos faltantes
+- `final_recommendation` — aprovado / refinamento / retrabalho
 
 ## Tools utilizadas
-- `qdrant`: Busca em base de conhecimento para comparação
-- `score_quality`: Pontua qualidade baseado em critérios
+- `score_quality` — avalia completude, clareza, testabilidade e consistência
+
+## Como rodar
+
+```bash
+# Standalone
+docker compose up audit-agent --build
+
+# Pipeline completo (todos em sequência)
+docker compose up --build
+```
+
+## Dependências
+- `openai`
+- `python-dotenv`
