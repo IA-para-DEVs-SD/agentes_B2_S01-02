@@ -1,0 +1,54 @@
+services:
+  scrum-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agente_01_scrum
+    user: "1000:1000"
+    env_file:
+      - ../../.env
+    volumes:
+      - ./output:/app/output
+    command: ["agente_01_scrum/agent.py"]
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/output/.scrum_done"]
+      interval: 3s
+      timeout: 2s
+      retries: 60
+      start_period: 5s
+
+  requirements-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agente_02_requisitos
+    user: "1000:1000"
+    env_file:
+      - ../../.env
+    volumes:
+      - ./output:/app/output
+    command: ["agente_02_requisitos/agent.py"]
+    depends_on:
+      scrum-agent:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/output/.requirements_done"]
+      interval: 3s
+      timeout: 2s
+      retries: 60
+      start_period: 5s
+
+  audit-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agente_03_auditoria
+    user: "1000:1000"
+    env_file:
+      - ../../.env
+    volumes:
+      - ./output:/app/output
+    command: ["agente_03_auditoria/agent.py"]
+    depends_on:
+      requirements-agent:
+        condition: service_healthy
