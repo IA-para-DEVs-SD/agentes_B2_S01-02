@@ -1,0 +1,37 @@
+TÓPICO: LENTIDÃO
+============================================================
+
+ARTIGO 1
+------------------------------------------------------------
+Título: How To Fix A Slow WordPress Site Step By Step Without Guessing - Codeable
+URL: https://www.codeable.io/blog/how-to-speed-up-wordpress-site/
+
+Conteúdo:
+How To Fix A Slow WordPress Site Step By Step Without Guessing - Codeable 
+
+We use cookies to make our site work and for analytics and content optimization purposes. By using it you agree to the use of cookies for these purposes. See our privacy and cookie policy for details.
+
+OK
+
+### Codeable Blog
+
+# How To Fix A Slow WordPress Site Step By Step Without Guessing
+
+March 23, 2026
+
+You searched “how to speed up WordPress site” and got ten different guides telling you ten different things. One says
+
+============================================================
+
+ARTIGO 2
+------------------------------------------------------------
+Título: WordPress Speed Optimization: The Complete Guide (From a Developer Who's Done 100+ Performance Audits) - Luca Ottolini (Luca8Link)
+URL: https://lucaottolini.com/wordpress-speed-optimization-the-complete-guide-from-a-developer-whos-done-100-performance-audits/
+
+Conteúdo:
+# WordPress Speed Optimization: The Complete Guide (From a Developer Who’s Done 100+ Performance Audits)
+
+I’ve been optimizing WordPress sites for speed since before Core Web Vitals existed, before Google made page speed a ranking factor, before “performance” became a marketing buzzword for every hosting company. Over 20 years of development and more than 100 performance audits on Codeable have taught me something that most speed optimization guides won’t tell you: the majority of WordPress spee
+
+============================================================
+

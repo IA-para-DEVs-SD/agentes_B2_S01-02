@@ -8,7 +8,7 @@ POSTGRES_CONFIG = {
     "database": "suporte_ai",
     "user": "admin",
     "password": "admin123",
-    "port": 5433,
+    "port": 5438,
 }
 
 COLLECTION_NAME = "kb_chunks"

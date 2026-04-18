@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "user_story": "Como usuário, quero redefinir minha senha para recuperar o acesso à minha conta.",
+    "acceptance_criteria": [
+      "O usuário deve poder solicitar redefinição por e-mail",
+      "O link deve expirar após um período",
+      "O sistema deve confirmar quando a senha for alterada"
+    ]
+  },
+  {
+    "id": 2,
+    "user_story": "Como administrador, quero visualizar um dashboard com métricas de uso do sistema para tomar decisões baseadas em dados.",
+    "acceptance_criteria": [
+      "O dashboard deve mostrar usuários ativos nos últimos 30 dias",
+      "Deve exibir gráficos de uso por funcionalidade",
+      "Deve permitir filtrar por período"
+    ]
+  },
+  {
+    "id": 3,
+    "user_story": "Como cliente, quero receber notificações por e-mail quando meu pedido mudar de status para acompanhar a entrega.",
+    "acceptance_criteria": [
+      "Notificação ao confirmar pedido",
+      "Notificação ao despachar",
+      "Notificação ao entregar",
+      "O usuário pode desativar notificações"
+    ]
+  }
+]
