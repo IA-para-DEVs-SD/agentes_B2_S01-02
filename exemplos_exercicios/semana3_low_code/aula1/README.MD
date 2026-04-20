@@ -1,57 +1,106 @@
-RAG com N8N + Supabase 
-Pipeline completo de Retrieval-Augmented Generation: PDF/texto → chunks → embeddings → pgvector → busca semântica → LLM.
+# 🤖 RAG com N8N + Supabase
 
-Stack
-ServiçoFunçãoURLN8N CloudOrquestrador dos fluxoshttps://n8n.ioSupabasePostgreSQL + pgvector (vector store)https://supabase.comOpenAIEmbeddings + LLM (GPT-4o)https://platform.openai.com
+> Pipeline completo de **Retrieval-Augmented Generation**: PDF/texto → chunks → embeddings → pgvector → busca semântica → LLM.
 
-Arquitetura
-INGESTION (uma vez — popula o banco)
+---
+
+## 📚 Índice
+
+- [Stack](#-stack)
+- [Arquitetura](#-arquitetura)
+- [1. Setup Supabase](#1-setup-supabase)
+- [2. Setup N8N Cloud](#2-setup-n8n-cloud)
+- [3. Fluxo de Ingestion](#3-fluxo-de-ingestion)
+- [4. Fluxo de Inference](#4-fluxo-de-inference)
+- [5. SQL: Queries Úteis](#5-sql-queries-úteis)
+- [6. Exportar/Importar Workflows](#6-exportarimportar-workflows-no-n8n)
+- [7. Dicas para a Aula](#7-dicas-para-a-aula)
+- [Referências](#-referências)
+
+---
+
+## 🛠️ Stack
+
+| Serviço | Função | URL |
+|---------|--------|-----|
+| **N8N Cloud** | Orquestrador dos fluxos | https://n8n.io |
+| **Supabase** | PostgreSQL + pgvector (vector store) | https://supabase.com |
+| **OpenAI** | Embeddings + LLM (GPT-4o) | https://platform.openai.com |
+
+---
+
+## 🏗️ Arquitetura
+
+### 📥 INGESTION (uma vez — popula o banco)
+```
 Texto/PDF → Default Data Loader → Text Splitter → OpenAI Embeddings → Supabase Vector Store
+```
 
-INFERENCE (cada pergunta)
+### 🔍 INFERENCE (cada pergunta)
+```
 Chat Trigger → AI Agent → Supabase Vector Store Tool → OpenAI Chat Model → Resposta
+```
 
-1. Setup Supabase
-1.1 Criar conta e projeto
+---
 
-Acessar https://supabase.com → Start your project
-Login com GitHub
-New Project → Name: rag-n8n → Region: South America (São Paulo)
-Definir senha do banco — anotar essa senha!
-Aguardar ~2 minutos para provisionar
+## 1. Setup Supabase
 
-1.2 Pegar credenciais
-Connection String (para credencial Postgres no N8N):
+### 1.1 🚀 Criar conta e projeto
 
-No painel → clicar em Connect no topo
-Ir em Connection string → URI
-Substituir [YOUR-PASSWORD] pela senha criada:
+1. Acessar https://supabase.com → **Start your project**
+2. Login com GitHub
+3. **New Project** → Name: `rag-n8n` → Region: **South America (São Paulo)**
+4. Definir senha do banco — **⚠️ anotar essa senha!**
+5. Aguardar ~2 minutos para provisionar
 
+### 1.2 🔑 Pegar credenciais
+
+#### Connection String (para credencial Postgres no N8N):
+
+1. No painel → clicar em **Connect** no topo
+2. Ir em **Connection string** → **URI**
+3. Substituir `[YOUR-PASSWORD]` pela senha criada:
+
+```
 postgresql://postgres:SUA_SENHA@db.SEU_PROJETO.supabase.co:5432/postgres
-Service Role Key (para credencial Supabase API no N8N):
+```
 
-Settings → API
-Project API keys → service_role → Reveal
-Copiar — nunca expor no frontend!
+#### Service Role Key (para credencial Supabase API no N8N):
 
-1.3 SQL: Ativar pgvector
-Rodar no SQL Editor do Supabase:
-sqlcreate extension if not exists vector;
-1.4 SQL: Criar tabela de documentos
-sqlcreate table documents (
+1. **Settings** → **API**
+2. **Project API keys** → `service_role` → **Reveal**
+3. Copiar — **⚠️ nunca expor no frontend!**
+
+### 1.3 🔧 SQL: Ativar pgvector
+
+Rodar no **SQL Editor** do Supabase:
+
+```sql
+create extension if not exists vector;
+```
+
+### 1.4 📊 SQL: Criar tabela de documentos
+
+```sql
+create table documents (
   id        bigserial primary key,
   content   text,           -- texto do chunk
   metadata  jsonb,          -- fonte, página, etc.
   embedding vector(1536)    -- vetor OpenAI ada-002 / text-embedding-3-small
 );
-1.5 SQL: Criar índice de busca
-sqlcreate index on documents
+```
+
+### 1.5 ⚡ SQL: Criar índice de busca
+
+```sql
+create index on documents
 using ivfflat (embedding vector_cosine_ops)
 with (lists = 100);
+```
 
-Por que vector(1536)?
-O modelo text-embedding-3-small da OpenAI gera vetores de 1536 dimensões.
-O índice ivfflat acelera a busca por similaridade coseno — obrigatório para boa performance.
+> **💡 Por que `vector(1536)`?**  
+> O modelo `text-embedding-3-small` da OpenAI gera vetores de **1536 dimensões**.  
+> O índice `ivfflat` acelera a busca por similaridade coseno — **obrigatório para boa performance**.
 
 1.6 SQL: Criar função match_documents ⚠️ obrigatória
 Sem essa função o N8N retorna erro PGRST202. Rodar antes de testar o fluxo de Inference:
