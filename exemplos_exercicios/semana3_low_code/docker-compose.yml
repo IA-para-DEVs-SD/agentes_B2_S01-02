@@ -4,7 +4,7 @@ services:
     ports:
       - "5678:5678"
     volumes:
-      - ~/.n8n:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
       - ./semana3_low_code/aula1/arquivos:/data/files
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
@@ -44,3 +44,6 @@ services:
       - "8080:80"
     volumes:
       - ./semana3_low_code/aula1/arquivos:/usr/share/nginx/html
+
+volumes:
+  n8n_data:
