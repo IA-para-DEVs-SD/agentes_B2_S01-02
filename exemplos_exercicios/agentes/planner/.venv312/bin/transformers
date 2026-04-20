@@ -1,8 +1,0 @@
-#!/Users/hellenruthes/dev/agentes_B2_S01-02/exemplos_exercicios/agentes/planner/.venv312/bin/python3.12
-# -*- coding: utf-8 -*-
-import re
-import sys
-from transformers.cli.transformers import main
-if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
-    sys.exit(main())
