@@ -1,0 +1,11 @@
+id,data,produto,quantidade,valor,status
+1,2026-04-01,Notebook,2,3500.00,entregue
+2,2026-04-02,Mouse,5,150.00,entregue
+3,2026-04-03,Teclado,3,280.00,cancelado
+4,2026-04-07,Monitor,1,1200.00,entregue
+5,2026-04-08,Notebook,1,3500.00,pendente
+6,2026-04-10,Headset,4,320.00,entregue
+7,2026-04-12,Mouse,2,150.00,pendente
+8,2026-04-14,Teclado,1,280.00,entregue
+9,2026-04-15,Monitor,2,1200.00,cancelado
+10,2026-04-18,Headset,1,320.00,entregue
