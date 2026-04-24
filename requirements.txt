@@ -9,3 +9,7 @@ exa-py==2.11.0
 qdrant-client==1.17.1
 sentence-transformers==5.4.1
 openai-agents==0.13.6
+langfuse==4.5.0
+mlflow==3.11.1
+mlflow-skinny==3.11.1
+mlflow-tracing==3.11.1
