@@ -1,0 +1,46 @@
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - ~/.n8n:/home/node/.n8n
+      - ./semana3_low_code/aula1/arquivos:/data/files
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=senha123
+
+  flowise:
+    image: flowiseai/flowise
+    ports:
+      - "3001:3000"
+    volumes:
+      - ~/.flowise:/root/.flowise
+    environment:
+      - DATABASE_TYPE=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=flowise
+      - DATABASE_PASSWORD=flowise123
+      - DATABASE_NAME=flowise
+    depends_on:
+      - postgres
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "5480:5480"
+    volumes:
+      - ~/.pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=flowise
+      - POSTGRES_PASSWORD=flowise123
+      - POSTGRES_DB=flowise
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./semana3_low_code/aula1/arquivos:/usr/share/nginx/html
