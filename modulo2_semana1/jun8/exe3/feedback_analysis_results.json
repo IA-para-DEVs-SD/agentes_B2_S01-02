@@ -1,0 +1,182 @@
+[
+  {
+    "feedback_id": 1,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "App trava ao abrir a tela de pagamento."
+  },
+  {
+    "feedback_id": 2,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Nova interface é mais fácil de usar."
+  },
+  {
+    "feedback_id": 3,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Sistema lento para carregar informações."
+  },
+  {
+    "feedback_id": 4,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "Impossibilidade de finalizar a compra no site."
+  },
+  {
+    "feedback_id": 5,
+    "categoria": "atendimento",
+    "sentimento": "positivo",
+    "resumo": "Atendimento excelente e rápido na resolução."
+  },
+  {
+    "feedback_id": 6,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "App fecha ao abrir o perfil."
+  },
+  {
+    "feedback_id": 7,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Experiência ótima no app."
+  },
+  {
+    "feedback_id": 8,
+    "categoria": "pagamento",
+    "sentimento": "negativo",
+    "resumo": "Pagamento recusado sem explicação."
+  },
+  {
+    "feedback_id": 9,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Demora para carregar a página inicial."
+  },
+  {
+    "feedback_id": 10,
+    "categoria": "atendimento",
+    "sentimento": "positivo",
+    "resumo": "Suporte atencioso e eficaz."
+  },
+  {
+    "feedback_id": 11,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "App trava ao atualizar dados."
+  },
+  {
+    "feedback_id": 12,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Novo layout é bonito e organizado."
+  },
+  {
+    "feedback_id": 13,
+    "categoria": "pagamento",
+    "sentimento": "negativo",
+    "resumo": "Sem confirmação após o pagamento."
+  },
+  {
+    "feedback_id": 14,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Busca lenta no aplicativo."
+  },
+  {
+    "feedback_id": 15,
+    "categoria": "atendimento",
+    "sentimento": "positivo",
+    "resumo": "Atendimento bem orientado."
+  },
+  {
+    "feedback_id": 16,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "Erro ao anexar arquivos no app."
+  },
+  {
+    "feedback_id": 17,
+    "categoria": "pagamento",
+    "sentimento": "negativo",
+    "resumo": "Problema ao concluir pagamento com cartão."
+  },
+  {
+    "feedback_id": 18,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Experiência ótima sem dificuldades."
+  },
+  {
+    "feedback_id": 19,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Site lento."
+  },
+  {
+    "feedback_id": 20,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "App fecha ao clicar em configurações."
+  },
+  {
+    "feedback_id": 21,
+    "categoria": "atendimento",
+    "sentimento": "neutro",
+    "resumo": "Atendimento demorado, mas resolveu."
+  },
+  {
+    "feedback_id": 22,
+    "categoria": "pagamento",
+    "sentimento": "negativo",
+    "resumo": "Cupom não conseguiu ser aplicado."
+  },
+  {
+    "feedback_id": 23,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Clareza das informações no app."
+  },
+  {
+    "feedback_id": 24,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Tela de login demora para abrir."
+  },
+  {
+    "feedback_id": 25,
+    "categoria": "pagamento",
+    "sentimento": "negativo",
+    "resumo": "Pagamento processando sem conclusão."
+  },
+  {
+    "feedback_id": 26,
+    "categoria": "atendimento",
+    "sentimento": "positivo",
+    "resumo": "Suporte rápido e eficiente."
+  },
+  {
+    "feedback_id": 27,
+    "categoria": "bug",
+    "sentimento": "negativo",
+    "resumo": "App travou ao enviar dados."
+  },
+  {
+    "feedback_id": 28,
+    "categoria": "elogio",
+    "sentimento": "negativo",
+    "resumo": "Interface confusa após atualização."
+  },
+  {
+    "feedback_id": 29,
+    "categoria": "elogio",
+    "sentimento": "positivo",
+    "resumo": "Experiência geral muito satisfatória."
+  },
+  {
+    "feedback_id": 30,
+    "categoria": "performance",
+    "sentimento": "negativo",
+    "resumo": "Navegação lenta e congelamentos."
+  }
+]

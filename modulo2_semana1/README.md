@@ -2,6 +2,83 @@
 
 Configuração simples e pronta para uso do PostgreSQL com Docker Compose, incluindo PgAdmin para gerenciamento visual.
 
+## Você precisa instalar o docker 
+### Windows
+1. Instalar Docker Desktop
+
+Baixar:
+
+Docker Desktop Download
+
+Instalar normalmente.
+
+2. Reiniciar o computador
+
+O Docker normalmente instala:
+
+WSL2
+Docker Engine
+Docker Compose
+
+e pede reboot.
+
+3. Verificar instalação
+
+Abra PowerShell:
+
+docker --version
+
+Exemplo:
+
+Docker version 28.x.x
+
+Verifique também:
+
+docker compose version
+### Mac
+Apple Silicon (M1/M2/M3)
+
+Baixar:
+
+Docker Desktop Download
+
+Escolher:
+
+Mac with Apple Chip
+
+Instalar e abrir o Docker Desktop.
+
+Verificar:
+
+docker --version
+docker compose version
+Teste rápido
+
+Rodar:
+
+docker run hello-world
+
+Resultado esperado:
+
+Hello from Docker!
+Rodar o projeto
+
+Entrar na pasta:
+
+cd suporte_ai
+
+Subir containers:
+
+docker compose up -d
+
+Verificar:
+
+docker ps
+
+Deve aparecer algo parecido com:
+
+postgres_db
+pgadmin
 ---
 
 ## 📋 O que está incluído?
@@ -25,7 +102,6 @@ Você pode interagir com o PostgreSQL de várias formas:
 | **Terminal (psql)** | Intermediário | ✅ Rápido<br>✅ Scriptável<br>✅ Sempre disponível | ❌ Menos visual<br>❌ Curva de aprendizado |
 | **DBeaver** 🌟 | Iniciante | ✅ Interface visual<br>✅ Gratuito<br>✅ Autocomplete<br>✅ Multiplataforma | ❌ Precisa instalar |
 | **PgAdmin** | Intermediário | ✅ Oficial PostgreSQL<br>✅ Já incluído no Docker | ❌ Interface menos amigável |
-| **DataGrip** | Intermediário | ✅ Muito poderoso<br>✅ Integração IDE | ❌ Pago (JetBrains) |
 | **Python/código** | Avançado | ✅ Automação<br>✅ Integração apps | ❌ Requer código |
 
 **💡 Recomendação**: Se você está começando, use o **DBeaver** para visualizar e o **terminal** para queries rápidas!
@@ -50,14 +126,14 @@ docker-compose ps
 
 #### PostgreSQL
 - **Host**: `localhost`
-- **Porta**: `5432`
+- **Porta**: `5450`
 - **Usuário**: `postgres`
 - **Senha**: `postgres123`
 - **Database**: `mydb`
 
 **String de conexão:**
 ```
-postgresql://postgres:postgres123@localhost:5432/mydb
+postgresql://postgres:postgres123@localhost:5450/mydb
 ```
 
 #### PgAdmin (Interface Web)
@@ -83,14 +159,10 @@ docker exec -it postgres_db psql -U postgres -d mydb
 # Listar tabelas
 docker exec postgres_db psql -U postgres -d mydb -c "\dt"
 
-# Ver usuários
-docker exec postgres_db psql -U postgres -d mydb -c "SELECT * FROM usuarios;"
+# Ver conversas
+docker exec postgres_db psql -U postgres -d mydb -c "SELECT * FROM conversations;"
 
-# Ver produtos
-docker exec postgres_db psql -U postgres -d mydb -c "SELECT * FROM produtos;"
 
-# Contar registros
-docker exec postgres_db psql -U postgres -d mydb -c "SELECT COUNT(*) FROM usuarios;"
 ```
 
 #### Comandos úteis dentro do psql (após conectar):
@@ -142,7 +214,7 @@ sudo snap install dbeaver-ce
 3. Selecione **PostgreSQL**
 4. Preencha os dados:
    - **Host**: `localhost`
-   - **Port**: `5432`
+   - **Port**: `5450`
    - **Database**: `mydb`
    - **Username**: `postgres`
    - **Password**: `postgres123`
@@ -156,16 +228,9 @@ Pronto! Agora você pode:
 - ✅ Exportar dados para CSV/Excel
 - ✅ Criar diagramas ER
 
-### Opção 3: DataGrip (JetBrains - Pago)
 
-Se você já usa IntelliJ/PyCharm, pode usar o **DataGrip**:
 
-1. File → New → Data Source → PostgreSQL
-2. Host: `localhost`, Port: `5432`
-3. Database: `mydb`
-4. User: `postgres`, Password: `postgres123`
-
-### Opção 4: Via Python
+### Opção 3: Via Python
 
 ```python
 import psycopg2
@@ -179,7 +244,7 @@ conn = psycopg2.connect(
 )
 
 cursor = conn.cursor()
-cursor.execute("SELECT * FROM usuarios;")
+cursor.execute("SELECT * FROM conversations;")
 rows = cursor.fetchall()
 
 for row in rows:
@@ -203,7 +268,7 @@ Acesse http://localhost:5050 e siga as instruções na seção "Configurar PgAdm
    - Name: `Local PostgreSQL`
 5. Na aba **Connection**:
    - Host: `postgres` (nome do service no docker-compose)
-   - Port: `5432`
+   - Port: `5450`
    - Database: `mydb`
    - Username: `postgres`
    - Password: `postgres123`
