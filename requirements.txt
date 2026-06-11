@@ -16,3 +16,4 @@ mlflow-tracing==3.11.1
 presidio-analyzer
 presidio-anonymizer
 spacy
+pydantic
