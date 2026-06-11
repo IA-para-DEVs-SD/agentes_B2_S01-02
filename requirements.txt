@@ -13,3 +13,6 @@ langfuse==4.5.0
 mlflow==3.11.1
 mlflow-skinny==3.11.1
 mlflow-tracing==3.11.1
+presidio-analyzer
+presidio-anonymizer
+spacy
